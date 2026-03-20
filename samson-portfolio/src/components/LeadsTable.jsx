@@ -52,9 +52,15 @@ const LeadsTable = () => {
             });
             if (res.ok) {
                 setLeads(prev => prev.filter(l => l.id !== id));
+                showAlert('Transmission record purged successfully.');
+            } else {
+                const errorData = await res.json().catch(() => ({}));
+                console.error('Delete failed with status:', res.status, errorData);
+                showAlert(`DELETE_FAILED: Server responded with status ${res.status}. ${errorData.detail || ''}`);
             }
         } catch (err) {
-            console.error('Delete failure:', err);
+            console.error('Delete network/request failure:', err);
+            showAlert('CONNECTION_FAILURE: Unable to reach the security kernel.');
         }
     };
 

@@ -33,9 +33,12 @@ def get_contacts(_=Depends(get_current_admin)):
 @router.delete("/{id}")
 def delete_contact(id: str, _=Depends(get_current_admin)):
     try:
+        print(f"DELETING CONTACT WITH ID: {id}")
         result = db.contacts.delete_one({"_id": ObjectId(id)})
+        print(f"DELETE RESULT: {result.deleted_count} documents deleted")
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Transmission not found")
         return {"success": True}
     except Exception as e:
+        print(f"DELETE ERROR: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
