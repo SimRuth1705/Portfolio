@@ -67,7 +67,6 @@ const CustomCursor = () => {
           y: ringYSpring,
           border: `1px solid white`,
           mixBlendMode: "difference",
-          position: "fixed",
         }}
         initial={{ opacity: 0, scale: 0 }}
         animate={{
@@ -89,7 +88,6 @@ const CustomCursor = () => {
           y: cursorY,
           backgroundColor: "white",
           mixBlendMode: "difference",
-          position: "fixed",
         }}
         initial={{ opacity: 0 }}
         animate={{

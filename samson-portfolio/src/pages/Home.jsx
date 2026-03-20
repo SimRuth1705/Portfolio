@@ -88,8 +88,8 @@ const Home = () => {
       <motion.div variants={itemVariants}><Skills /></motion.div>
       <motion.div variants={itemVariants}><Projects /></motion.div>
       <motion.div variants={itemVariants}><Timeline /></motion.div>
-      <motion.div variants={itemVariants}><DevLog /></motion.div>
       <motion.div variants={itemVariants}><GitHubStats /></motion.div>
+      <motion.div variants={itemVariants}><DevLog /></motion.div>
       <motion.div variants={itemVariants}><Lab /></motion.div>
       <motion.div variants={itemVariants}><SystemSpecs /></motion.div>
       <motion.div variants={itemVariants}><ApiStatus /></motion.div>
@@ -97,7 +97,7 @@ const Home = () => {
 
       {isAdmin && (
         <>
-          <div className="fixed bottom-24 right-8 z-[10000]">
+          <div className="fixed bottom-24 right-8 z-10000">
             <AdminSettingsButton
               onAddProject={() => toggleModal('project', true)}
               onAddTimeline={() => toggleModal('timeline', true)}

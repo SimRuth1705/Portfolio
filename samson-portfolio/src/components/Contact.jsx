@@ -90,7 +90,7 @@ const Contact = () => {
         <section id="contact" className={`py-28 sm:py-32 md:py-60 relative flex flex-col items-center transition-colors duration-700 ${bg}`}>
             <div className={`absolute inset-0 ${gridBg} opacity-20 pointer-events-none w-full`}></div>
             <div className={`fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[1400px] border-x ${borderCol} pointer-events-none z-0`}></div>
-            <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${labelColor}`}>[ 03. CONNECT ]</span>
+            <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${labelColor}`}>[ 10. CONNECT ]</span>
 
             <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 grid grid-cols-1 md:grid-cols-12 gap-10 relative z-10 mt-8 md:mt-10">
 
@@ -147,10 +147,10 @@ const Contact = () => {
 
                     {/* Social Links */}
                     <motion.div variants={staggerContainer} className={`flex gap-8 pt-12 border-t ${socialBorder}`}>
-                        <motion.a variants={fadeInUp} href="https://github.com/samsonraj" target="_blank" rel="noopener noreferrer" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
+                        <motion.a variants={fadeInUp} href="https://github.com/SimRuth1705" target="_blank" rel="noopener noreferrer" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
                             <Github size={22} />
                         </motion.a>
-                        <motion.a variants={fadeInUp} href="https://linkedin.com/in/samsonraj" target="_blank" rel="noopener noreferrer" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
+                        <motion.a variants={fadeInUp} href="https://linkedin.com/in/samsonrajn" target="_blank" rel="noopener noreferrer" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
                             <Linkedin size={22} />
                         </motion.a>
                         <motion.a variants={fadeInUp} href="#" className={`${socialColor} hover:scale-125 transition-all duration-300`}>

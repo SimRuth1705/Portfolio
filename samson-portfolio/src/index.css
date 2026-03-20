@@ -10,33 +10,52 @@
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 }
 
-/* Custom Scrollbar for Chrome/Safari/Edge */
+/* Base Styles from App.css */
+html {
+  scroll-behavior: smooth;
+  cursor: none;
+}
+
+body {
+  background-color: #050505;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #000;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #222;
-  border-radius: 10px;
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #444;
+  background: #ffffff;
 }
 
-/* Fix for smooth scrolling behavior */
-html, body {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  position: relative;
-  min-height: 100%;
+/* Utilities */
+.grid-background {
+  background-size: 100px 100px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
 }
 
-/* Utility for the 'View' text stroke used in Skills section */
+.grid-background-dark {
+  background-size: 100px 100px;
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+}
+
 .w-text-stroke {
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
 }
@@ -44,6 +63,17 @@ html, body {
 .noise-overlay {
   background-image: url("https://grainy-gradients.vercel.app/noise.svg");
   filter: contrast(170%) brightness(100%);
+}
+
+.noise-overlay::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  animation: noise 3s steps(10) infinite;
 }
 
 @keyframes noise {
@@ -60,13 +90,52 @@ html, body {
   100% { transform: translate(5%, 0); }
 }
 
-.noise-overlay::before {
-  content: "";
-  position: absolute;
-  top: -100%;
-  left: -100%;
-  width: 300%;
-  height: 300%;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-  animation: noise 3s steps(10) infinite;
+/* Animations from App.css */
+@keyframes infinite-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 40s linear infinite;
+}
+
+@keyframes infinite-scroll-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.animate-infinite-scroll-reverse {
+  animation: infinite-scroll-reverse 50s linear infinite;
+}
+
+@keyframes row-forward {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-33.33333%); }
+}
+
+.row-scroll-forward {
+  animation-name: row-forward;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes row-reverse {
+  0% { transform: translateX(-33.333333%); }
+  100% { transform: translateX(0); }
+}
+
+.row-scroll-reverse {
+  animation-name: row-reverse;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }

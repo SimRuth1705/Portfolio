@@ -54,19 +54,19 @@ const Editable = ({ tagName = "span", id, defaultContent, className = "", onSave
     return <TagEl className={className}>{content}</TagEl>;
   }
 
+  // Simplified admin view to prevent layout breaks
   return (
-    <span className="relative group/editable inline-block">
+    <span className="relative group inline-block">
       <TagEl
         contentEditable
         onBlur={handleBlur}
         suppressContentEditableWarning={true}
-        className={`${className} outline-none focus:ring-1 focus:ring-white/20 px-1 -mx-1 rounded transition-all cursor-text min-w-[20px]`}
+        className={`${className} outline-none focus:ring-1 focus:ring-white/20`}
       >
         {content}
       </TagEl>
-
-      <span className="absolute -top-6 left-0 opacity-0 group-hover/editable:opacity-100 transition-opacity bg-white text-black text-[8px] font-mono px-1 py-0.5 rounded pointer-events-none z-50 whitespace-nowrap uppercase tracking-widest">
-        Edit: {id}
+      <span className="absolute -top-4 left-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-[8px] px-1 pointer-events-none z-50 whitespace-nowrap">
+        {id}
       </span>
     </span>
   );

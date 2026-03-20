@@ -304,6 +304,9 @@ const Skills = () => {
               className="flex items-center gap-3"
             >
               <div className={`h-px w-8 ${isDark ? "bg-white/20" : "bg-black/20"}`} />
+              <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${isDark ? "text-zinc-600" : "text-zinc-400"}`}>
+                [ 02. ENGINE ]
+              </span>
               <span className={`text-[10px] font-mono uppercase tracking-[0.5em] ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>
                 <Editable id="skills_status" defaultContent="Engine Capabilities" />
               </span>

@@ -215,6 +215,9 @@ const GitHubStats = () => {
         <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
           <div>
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} className="flex items-center gap-3 mb-4">
+              <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${isDark ? "text-zinc-600" : "text-zinc-500"}`}>
+                [ 05. NETWORK ]
+              </span>
               <div className="h-[2px] w-8 bg-[#2ea043]" />
               <span className={`text-[10px] font-mono uppercase tracking-[0.5em] ${isDark ? "text-zinc-500" : "text-zinc-500"}`}>
                 <Editable id="github_status" defaultContent="Live Network Sync" />

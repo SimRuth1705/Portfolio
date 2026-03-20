@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
-import "./App.css";
 import { useTheme } from "./context/ThemeContext";
 
 // Global Components

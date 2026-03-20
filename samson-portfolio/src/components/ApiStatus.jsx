@@ -6,11 +6,6 @@ import Editable from './Editable';
 
 import { API_BASE } from '../constants';
 
-const endpoints = [
-    { name: 'Portfolio API', url: API_BASE, id: 'pallet' },
-    { name: 'GitHub Stats', url: 'https://api.github.com/users/samsonraj', id: 'github' },
-];
-
 const StatusDot = ({ status }) => {
     if (status === 'loading') return <Loader2 size={14} className="animate-spin text-zinc-500" />;
     if (status === 'online') return <CheckCircle2 size={14} className="text-green-500" />;
@@ -19,33 +14,50 @@ const StatusDot = ({ status }) => {
 
 const ApiStatus = () => {
     const { isDark } = useTheme();
-    const [statuses, setStatuses] = useState(
-        endpoints.reduce((acc, ep) => ({ ...acc, [ep.id]: 'loading' }), {})
-    );
+    const [githubUser, setGithubUser] = useState("SimRuth1705");
+    const [statuses, setStatuses] = useState({ pallet: 'loading', github: 'loading' });
+
+    const endpoints = [
+        { name: 'Portfolio API', url: API_BASE, id: 'pallet' },
+        { name: 'GitHub Stats', url: `https://api.github.com/users/${githubUser}`, id: 'github' },
+    ];
 
     const checkStatuses = async () => {
-        endpoints.forEach(async (ep) => {
+        for (const ep of endpoints) {
             try {
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 8000);
-                const res = await fetch(ep.url, { signal: controller.signal });
+                await fetch(ep.url, { signal: controller.signal });
                 clearTimeout(timeout);
                 setStatuses(prev => ({ ...prev, [ep.id]: 'online' }));
             } catch {
                 setStatuses(prev => ({ ...prev, [ep.id]: 'offline' }));
             }
-        });
+        }
     };
 
     useEffect(() => {
-        checkStatuses();
-        const interval = setInterval(checkStatuses, 30000); // Check every 30 seconds
-        return () => clearInterval(interval);
+        const fetchUsername = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/content/github_username`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data?.content) setGithubUser(data.content);
+                }
+            } catch (err) { console.error("Failed to fetch github_username:", err); }
+        };
+        fetchUsername();
     }, []);
+
+    useEffect(() => {
+        checkStatuses();
+        const interval = setInterval(checkStatuses, 60000);
+        return () => clearInterval(interval);
+    }, [githubUser]);
 
     return (
         <section id="api-status" className={`py-28 sm:py-32 md:py-60 px-4 sm:px-6 md:px-10 border-b relative transition-colors duration-700 ${isDark ? 'border-white/20' : 'border-black/10'}`}>
-            <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>[ 10. STATUS ]</span>
+            <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>[ 09. STATUS ]</span>
 
             <div className="max-w-[1400px] mx-auto mt-10">
                 <div className="mb-24">

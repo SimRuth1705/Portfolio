@@ -82,7 +82,7 @@ const Projects = () => {
         className={`py-28 sm:py-32 md:py-60 px-4 sm:px-6 md:px-10 border-b relative transition-colors duration-700 ${isDark ? "border-white/20" : "border-black/10"}`}
       >
         <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${isDark ? "text-zinc-600" : "text-zinc-400"}`}>
-          [ 02. WORKS ]
+          [ 03. WORKS ]
         </span>
 
         <div className="max-w-[1400px] mx-auto mt-10">

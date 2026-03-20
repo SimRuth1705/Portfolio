@@ -116,6 +116,9 @@ const DevLog = () => {
       <div className="max-w-[1400px] mx-auto">
         <div className="mb-24">
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="flex items-center gap-3 mb-4">
+            <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${isDark ? "text-zinc-600" : "text-zinc-400"}`}>
+              [ 06. ACTIVITY ]
+            </span>
             <div className={`h-px w-8 ${isDark ? "bg-white/20" : "bg-black/20"}`} />
             <span className={`text-[10px] font-mono uppercase tracking-[0.5em] ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>
               <Editable id="devlog_status" defaultContent="Dev Stream" />
