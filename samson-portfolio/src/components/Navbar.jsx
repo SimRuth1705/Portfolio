@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo-seal.png";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import { LogOut, Shield, Command, Menu, X } from "lucide-react";
+import { LogOut, Shield, Command, Menu, X, Sun, Moon, Zap, FolderPlus, Clock, MessageSquarePlus, Code, Activity } from "lucide-react";
 import Editable from "./Editable";
 import Magnetic from "./Magnetic";
 
@@ -34,13 +34,18 @@ const MENU_ITEMS = [
   { label: "Contact", section: "contact" },
 ];
 
-const Navbar = () => {
+const Navbar = ({ 
+  onAddProject, 
+  onAddTimeline, 
+  onAddTestimonial, 
+  onAddDevLog 
+}) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoClicks, setLogoClicks] = useState(0);
   const { isAdmin, logout } = useAuth();
-  const { isDark } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const { scrollY } = useScroll();
@@ -395,6 +400,68 @@ const Navbar = () => {
                   className="mt-12 flex flex-col items-center gap-4 relative z-10"
                 >
                   <div className={`h-px w-8 ${isDark ? "bg-white/20" : "bg-black/20"}`} />
+                  
+                  {/* SYSTEM_CONTROLS: Theme Toggle & Admin Actions */}
+                  <div className="flex flex-col items-center gap-8 w-full max-w-xl">
+                    <div className="flex items-center gap-6">
+                       <button
+                        onClick={toggleTheme}
+                        className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-500 group ${isDark ? "border-white/10 hover:border-white text-white" : "border-black/10 hover:border-black text-black"}`}
+                      >
+                        <AnimatePresence mode="wait">
+                          {isDark ? (
+                            <motion.div key="sun" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.3 }}>
+                              <Sun size={16} />
+                            </motion.div>
+                          ) : (
+                            <motion.div key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.3 }}>
+                              <Moon size={16} />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                        <span className="font-mono text-[10px] uppercase tracking-[0.3em] font-bold">
+                          {isDark ? "Light_Mode" : "Dark_Mode"}
+                        </span>
+                      </button>
+
+                      {isAdmin && (
+                        <button
+                          onClick={() => {
+                            setMenuOpen(false);
+                            navigate("/transmit");
+                          }}
+                          className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-500 group ${isDark ? "border-amber-500/20 text-amber-500 hover:border-amber-500" : "border-amber-600/20 text-amber-600 hover:border-amber-600"}`}
+                        >
+                          <Activity size={16} />
+                          <span className="font-mono text-[10px] uppercase tracking-[0.3em] font-bold">Transmissions</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {isAdmin && (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+                        {[
+                          { label: 'Project', icon: FolderPlus, onClick: onAddProject, color: 'hover:border-blue-500/40 text-blue-500' },
+                          { label: 'Event', icon: Clock, onClick: onAddTimeline, color: 'hover:border-green-500/40 text-green-500' },
+                          { label: 'Voices', icon: MessageSquarePlus, onClick: onAddTestimonial, color: 'hover:border-purple-500/40 text-purple-500' },
+                          { label: 'Log', icon: Code, onClick: onAddDevLog, color: 'hover:border-orange-500/40 text-orange-500' },
+                        ].map((action, i) => (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              action.onClick?.();
+                              setMenuOpen(false);
+                            }}
+                            className={`flex flex-col items-center justify-center p-4 border transition-all duration-300 ${isDark ? 'border-white/5 bg-white/[0.01]' : 'border-black/5 bg-black/[0.01]'} ${action.color}`}
+                          >
+                            <action.icon size={18} className="mb-2 opacity-60 group-hover:opacity-100" />
+                            <span className="text-[8px] font-mono uppercase tracking-widest">{action.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
                   <p className={`font-mono text-[8px] uppercase tracking-[0.4em] text-center ${isDark ? "text-zinc-600" : "text-zinc-400"}`}>
                     SAMSON_OS V2.5
                   </p>

@@ -95,16 +95,6 @@ const Home = () => {
       <motion.div variants={itemVariants}><ApiStatus /></motion.div>
       <motion.div variants={itemVariants}><Contact /></motion.div>
 
-      {isAdmin && (
-        <>
-          <div className="fixed bottom-24 right-8 z-[9999]">
-            <AdminSettingsButton
-              onAddProject={() => toggleModal('project', true)}
-              onAddTimeline={() => toggleModal('timeline', true)}
-              onAddTestimonial={() => toggleModal('testimonial', true)}
-              onAddDevLog={() => toggleModal('devlog', true)}
-            />
-          </div>
 
           <AddProjectModal
             isOpen={modals.project}
@@ -126,8 +116,6 @@ const Home = () => {
             onClose={() => toggleModal('devlog', false)}
             onSubmit={(data) => handleCreate('/api/devlogs', data, 'devlog')}
           />
-        </>
-      )}
     </motion.div>
   );
 };

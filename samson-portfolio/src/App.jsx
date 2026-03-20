@@ -7,7 +7,6 @@ import { useTheme } from "./context/ThemeContext";
 import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import ThemeToggle from "./components/ThemeToggle";
 import CommandPalette from "./components/CommandPalette";
 import SystemDialog from "./components/SystemDialog";
 
@@ -70,9 +69,6 @@ function App() {
 
       {/* 4. Structural Elements */}
       <Footer />
-
-        {/* 5. Floating Theme Toggle */}
-        <ThemeToggle />
     </div>
   );
 }
