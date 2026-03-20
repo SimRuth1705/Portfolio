@@ -47,6 +47,12 @@ const Footer = () => {
           <li>
             <Link to="/faq" className={`transition-colors duration-300 ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>FAQ</Link>
           </li>
+          <li>
+            <a href="https://x.com/raj_samson52595" target="_blank" rel="noopener noreferrer" className={`transition-colors duration-300 ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>Twitter</a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/samsonrajn1706" target="_blank" rel="noopener noreferrer" className={`transition-colors duration-300 ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>LinkedIn</a>
+          </li>
         </ul>
 
       </div>

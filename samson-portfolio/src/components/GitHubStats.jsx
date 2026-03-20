@@ -174,7 +174,7 @@ const GitHubStats = () => {
         const sortedCommits = allCommits.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 50);
         
         setActivities(sortedCommits);
-        setFeaturedRepos([...repos].sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 3));
+        setFeaturedRepos([...repos].sort((a, b) => b.stargazers_count - a.stargazers_count));
 
         const langPromises = repos.slice(0, 10).map(repo =>
           fetch(repo.languages_url, { headers }).then(res => res.ok ? res.json() : {})
@@ -258,7 +258,7 @@ const GitHubStats = () => {
                 <div className={`h-px flex-1 ${isDark ? "bg-white/5" : "bg-black/5"}`} />
                 <h3 className={`text-[10px] font-mono uppercase tracking-[0.4em] ${isDark ? "text-zinc-600" : "text-zinc-400"}`}>Featured_Repositories</h3>
               </div>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {featuredRepos.map((repo, idx) => (
                   <RepoCard key={repo.id} repo={repo} isDark={isDark} delay={0.1 * idx} />
                 ))}

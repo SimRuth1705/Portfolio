@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Editable from './Editable';
 import heroImg from '../assets/hero.png';
-import { Phone, Mail } from 'lucide-react';
+import { Phone, Mail, Twitter, Linkedin } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import TextReveal from './TextReveal';
 
@@ -13,18 +13,6 @@ const Hero = () => {
     const opacityHero = useTransform(heroScroll, [0, 0.8], [1, 0]);
     const skewHero = useTransform(heroScroll, [0, 0.5], [0, 5]);
     const { isDark } = useTheme();
-
-    const springX = useSpring(0, { stiffness: 50, damping: 20 });
-    const springY = useSpring(0, { stiffness: 50, damping: 20 });
-
-    const handleMouseMove = (e) => {
-        const { clientX, clientY } = e;
-        const { innerWidth, innerHeight } = window;
-        const x = (clientX / innerWidth - 0.5) * 50;
-        const y = (clientY / innerHeight - 0.5) * 50;
-        springX.set(x);
-        springY.set(y);
-    };
 
     const fadeInUp = {
         hidden: { opacity: 0, y: 60 },
@@ -39,16 +27,13 @@ const Hero = () => {
         <section
             ref={heroRef}
             id="home"
-            onMouseMove={handleMouseMove}
             className={`relative min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-10 border-b overflow-hidden transition-colors duration-700 ${isDark ? 'border-white/20' : 'border-black/10'}`}
         >
-            {/* Animated Background Elements */}
-            <motion.div
-                style={{ x: useTransform(springX, x => x * -1.5), y: useTransform(springY, y => y * -1.5) }}
+            {/* Ambient Background Elements (Static for Performance) */}
+            <div
                 className={`absolute top-1/4 left-1/4 w-96 h-96 blur-[150px] rounded-full mix-blend-screen pointer-events-none opacity-50 ${isDark ? 'bg-white/10' : 'bg-black/5'}`}
             />
-            <motion.div
-                style={{ x: useTransform(springX, x => x * 1.2), y: useTransform(springY, y => y * 1.2) }}
+            <div
                 className={`absolute bottom-1/4 right-1/4 w-64 h-64 blur-[100px] rounded-full mix-blend-screen pointer-events-none opacity-50 ${isDark ? 'bg-white/10' : 'bg-black/5'}`}
             />
 
@@ -94,7 +79,7 @@ const Hero = () => {
                     </motion.p>
 
                     {/* Contact Pill Row */}
-                    <motion.div variants={staggerContainer} className="flex flex-col sm:flex-row gap-4 mt-4">
+                    <motion.div variants={staggerContainer} className="flex flex-wrap gap-4 mt-4">
                         <motion.a
                             variants={fadeInUp}
                             href="tel:+918825470047"
@@ -111,6 +96,26 @@ const Hero = () => {
                             <Mail size={12} className="group-hover:scale-125 transition-transform duration-300" />
                             samsonraj74@gmail.com
                         </motion.a>
+                        <motion.a
+                            variants={fadeInUp}
+                            href="https://x.com/raj_samson52595"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`flex items-center gap-2 text-[11px] font-mono border px-4 py-2 transition-all duration-300 group ${isDark ? 'text-zinc-500 border-white/10 hover:border-white/40 hover:text-white hover:bg-white/5' : 'text-zinc-500 border-black/10 hover:border-black/40 hover:text-black hover:bg-black/5'}`}
+                        >
+                            <Twitter size={12} className="group-hover:scale-125 transition-transform duration-300" />
+                            Twitter
+                        </motion.a>
+                        <motion.a
+                            variants={fadeInUp}
+                            href="https://www.linkedin.com/in/samsonrajn1706"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`flex items-center gap-2 text-[11px] font-mono border px-4 py-2 transition-all duration-300 group ${isDark ? 'text-zinc-500 border-white/10 hover:border-white/40 hover:text-white hover:bg-white/5' : 'text-zinc-500 border-black/10 hover:border-black/40 hover:text-black hover:bg-black/5'}`}
+                        >
+                            <Linkedin size={12} className="group-hover:scale-125 transition-transform duration-300" />
+                            LinkedIn
+                        </motion.a>
                     </motion.div>
                 </motion.div>
 
@@ -121,8 +126,6 @@ const Hero = () => {
                     <div className={`absolute inset-0 blur-[120px] rounded-full ${isDark ? 'bg-white/5' : 'bg-black/5'}`}></div>
                     <motion.div
                         style={{
-                            rotateX: useTransform(springY, y => y * 0.1),
-                            rotateY: useTransform(springX, x => x * 0.1),
                             skewY: skewHero
                         }}
                         className={`relative p-2 border group overflow-hidden transition-colors duration-700 ${isDark ? 'border-white/20 bg-black' : 'border-black/10 bg-white'}`}

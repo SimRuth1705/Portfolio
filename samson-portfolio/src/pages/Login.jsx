@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_BASE } from '../constants';
 import VaultDashboard from '../components/VaultDashboard';
 
-const Login = () => {
+const Login = ({ onAddProject, onAddTimeline, onAddTestimonial, onAddDevLog }) => {
     const { isAdmin, login, logout } = useAuth();
     const { showAlert } = useDialog();
     const { isDark } = useTheme();
@@ -90,7 +90,13 @@ const Login = () => {
                 )}
 
                 {isAdmin ? (
-                    <VaultDashboard onLogout={handleLogout} />
+                    <VaultDashboard 
+                        onLogout={handleLogout} 
+                        onAddProject={onAddProject}
+                        onAddTimeline={onAddTimeline}
+                        onAddTestimonial={onAddTestimonial}
+                        onAddDevLog={onAddDevLog}
+                    />
                 ) : (
                     <>
                         <div className="text-center mb-12">

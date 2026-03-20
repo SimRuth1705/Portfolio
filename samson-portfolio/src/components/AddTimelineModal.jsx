@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import CustomDropdown from './CustomDropdown';
@@ -29,26 +29,27 @@ const AddTimelineModal = ({ isOpen, onClose, onSubmit }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  if (!isOpen) return null;
-
   return (
-    <AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className={`fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm`}
+      onClick={onClose}
+    >
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${isDark ? 'bg-black/80' : 'bg-black/60'}`}
-        onClick={onClose}
+        layoutId="event-modal-container"
+        className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border p-8 ${isDark ? 'bg-[#050505] border-white/10' : 'bg-[#f5f5f0] border-black/10'} shadow-2xl`}
+        onClick={e => e.stopPropagation()}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border p-8 ${isDark ? 'bg-[#050505] border-white/10' : 'bg-[#f5f5f0] border-black/10'}`}
-          onClick={e => e.stopPropagation()}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.1 }}
+          className="w-full h-full text-left"
         >
-          {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <h2 className={`text-2xl font-display font-black ${isDark ? 'text-white' : 'text-black'}`}>
               Add Timeline Event
@@ -61,44 +62,31 @@ const AddTimelineModal = ({ isOpen, onClose, onSubmit }) => {
             </button>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Year */}
             <div>
-              <label htmlFor="timeline-year" className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                Year *
-              </label>
+              <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Year *</label>
               <input
                 type="text"
-                id="timeline-year"
-                name="year"
                 required
                 value={formData.year}
                 onChange={(e) => handleInputChange('year', e.target.value)}
-                className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white focus:border-white/30' : 'bg-black/5 border-black/10 text-black focus:border-black/30'} focus:outline-none`}
+                className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
                 placeholder="2025"
               />
             </div>
 
-            {/* Title */}
             <div>
-              <label htmlFor="timeline-title" className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                Title *
-              </label>
+              <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Title *</label>
               <input
                 type="text"
-                id="timeline-title"
-                name="title"
                 required
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                autoComplete="off"
-                className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white focus:border-white/30' : 'bg-black/5 border-black/10 text-black focus:border-black/30'} focus:outline-none`}
+                className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
                 placeholder="Event Title"
               />
             </div>
 
-            {/* Type */}
             <CustomDropdown
               label="Type *"
               value={formData.type}
@@ -111,24 +99,18 @@ const AddTimelineModal = ({ isOpen, onClose, onSubmit }) => {
               ]}
             />
 
-            {/* Description */}
             <div>
-              <label htmlFor="timeline-description" className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                Description *
-              </label>
+              <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Description *</label>
               <textarea
-                id="timeline-description"
-                name="description"
                 required
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={4}
-                className={`w-full px-4 py-3 rounded-lg border transition-colors resize-none ${isDark ? 'bg-white/5 border-white/10 text-white focus:border-white/30' : 'bg-black/5 border-black/10 text-black focus:border-black/30'} focus:outline-none`}
+                className={`w-full px-4 py-3 rounded-lg border transition-colors resize-none ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
                 placeholder="Describe this event..."
               />
             </div>
 
-            {/* Submit Button */}
             <div className="flex justify-end pt-6">
               <button
                 type="submit"
@@ -140,7 +122,7 @@ const AddTimelineModal = ({ isOpen, onClose, onSubmit }) => {
           </form>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </motion.div>
   );
 };
 

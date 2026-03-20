@@ -36,12 +36,11 @@ const StatCard = ({ label, value, icon: Icon, color, isDark }) => (
     </motion.div>
 );
 
-const VaultDashboard = ({ onLogout }) => {
+const VaultDashboard = ({ onLogout, onAddProject, onAddTimeline, onAddTestimonial, onAddDevLog }) => {
     const { isDark } = useTheme();
     const { isAdmin } = useAuth();
     const [stats, setStats] = useState({ projects: 0, devlogs: 0, leads: 0, testimonials: 0, skills: 0 });
     const [apiHealth, setApiHealth] = useState('checking');
-    const [modals, setModals] = useState({ project: false, timeline: false, testimonial: false, devlog: false });
 
     const fetchStats = async () => {
         try {
@@ -69,28 +68,12 @@ const VaultDashboard = ({ onLogout }) => {
     useEffect(() => {
         fetchStats();
         checkHealth();
+
+        // Listen for global content updates (from Navbar/Admin Modals)
+        window.addEventListener('content-updated', fetchStats);
+        return () => window.removeEventListener('content-updated', fetchStats);
     }, [isAdmin]);
 
-    const handleCreate = async (endpoint, data, modalType) => {
-        try {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(data)
-            });
-            if (res.ok) {
-                toggleModal(modalType, false);
-                fetchStats();
-            }
-        } catch (err) {
-            console.error(`Failed to create ${modalType}:`, err);
-        }
-    };
-
-    const toggleModal = (type, state) => setModals(prev => ({ ...prev, [type]: state }));
 
     return (
         <div className="max-w-6xl mx-auto space-y-12 pb-20">
@@ -130,10 +113,10 @@ const VaultDashboard = ({ onLogout }) => {
             {/* Action Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { label: 'New Project', icon: FolderPlus, color: 'hover:border-blue-500/40', onClick: () => toggleModal('project', true) },
-                    { label: 'New Event', icon: Clock, color: 'hover:border-green-500/40', onClick: () => toggleModal('timeline', true) },
-                    { label: 'New Voices', icon: MessageSquarePlus, color: 'hover:border-purple-500/40', onClick: () => toggleModal('testimonial', true) },
-                    { label: 'New DevLog', icon: Code, color: 'hover:border-orange-500/40', onClick: () => toggleModal('devlog', true) },
+                    { label: 'New Project', icon: FolderPlus, color: 'hover:border-blue-500/40', onClick: onAddProject },
+                    { label: 'New Event', icon: Clock, color: 'hover:border-green-500/40', onClick: onAddTimeline },
+                    { label: 'New Voices', icon: MessageSquarePlus, color: 'hover:border-purple-500/40', onClick: onAddTestimonial },
+                    { label: 'New DevLog', icon: Code, color: 'hover:border-orange-500/40', onClick: onAddDevLog },
                 ].map((action, i) => (
                     <button
                         key={i}
@@ -158,27 +141,6 @@ const VaultDashboard = ({ onLogout }) => {
                 <LeadsTable />
             </div>
 
-            {/* Modals */}
-            <AddProjectModal
-                isOpen={modals.project}
-                onClose={() => toggleModal('project', false)}
-                onSubmit={(data) => handleCreate('/api/projects', data, 'project')}
-            />
-            <AddTimelineModal
-                isOpen={modals.timeline}
-                onClose={() => toggleModal('timeline', false)}
-                onSubmit={(data) => handleCreate('/api/timeline', data, 'timeline')}
-            />
-            <AddTestimonialModal
-                isOpen={modals.testimonial}
-                onClose={() => toggleModal('testimonial', false)}
-                onSubmit={(data) => handleCreate('/api/testimonials', data, 'testimonial')}
-            />
-            <AddDevLogModal
-                isOpen={modals.devlog}
-                onClose={() => toggleModal('devlog', false)}
-                onSubmit={(data) => handleCreate('/api/devlogs', data, 'devlog')}
-            />
         </div>
     );
 };

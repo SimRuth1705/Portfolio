@@ -29,7 +29,7 @@ const SkillChip = ({ id, name, index, isDark, row, isAdmin, onEdit, onDelete }) 
     className="relative group"
   >
     <span
-      className={`inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] border px-6 py-3 mx-4 transition-all duration-300 cursor-default whitespace-nowrap ${isDark
+      className={`inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] border px-4 md:px-6 py-3 mx-2 md:mx-4 transition-all duration-300 cursor-default whitespace-nowrap ${isDark
         ? "text-zinc-500 border-white/10 hover:text-white hover:border-white/40 hover:bg-white/5 hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]"
         : "text-zinc-400 border-black/10 hover:text-black hover:border-black/40 hover:bg-black/5 hover:drop-shadow-[0_0_12px_rgba(0,0,0,0.15)]"
         }`}
@@ -397,8 +397,8 @@ const Skills = () => {
       </AnimatePresence>
 
       {/* Edge fade masks */}
-      <div className={`absolute inset-y-0 left-0 w-40 pointer-events-none z-10 ${isDark ? "bg-gradient-to-r from-[#050505] to-transparent" : "bg-gradient-to-r from-[#f5f5f0] to-transparent"}`} />
-      <div className={`absolute inset-y-0 right-0 w-40 pointer-events-none z-10 ${isDark ? "bg-gradient-to-l from-[#050505] to-transparent" : "bg-gradient-to-l from-[#f5f5f0] to-transparent"}`} />
+      <div className={`absolute inset-y-0 left-0 w-12 sm:w-24 md:w-32 lg:w-40 pointer-events-none z-10 ${isDark ? "bg-gradient-to-r from-[#050505] to-transparent" : "bg-gradient-to-r from-[#f5f5f0] to-transparent"}`} />
+      <div className={`absolute inset-y-0 right-0 w-12 sm:w-24 md:w-32 lg:w-40 pointer-events-none z-10 ${isDark ? "bg-gradient-to-l from-[#050505] to-transparent" : "bg-gradient-to-l from-[#f5f5f0] to-transparent"}`} />
     </motion.section>
   );
 };

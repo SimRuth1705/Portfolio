@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
 // Layout Components
@@ -14,47 +14,7 @@ import SystemSpecs from '../components/SystemSpecs';
 import ApiStatus from '../components/ApiStatus';
 import Contact from '../components/Contact';
 
-// Admin Components
-import AdminSettingsButton from '../components/AdminSettingsButton';
-import AddProjectModal from '../components/AddProjectModal';
-import AddTimelineModal from '../components/AddTimelineModal';
-import AddTestimonialModal from '../components/AddTestimonialModal';
-import AddDevLogModal from '../components/AddDevLogModal';
-
-import { useAuth } from '../context/AuthContext';
-import { API_BASE } from '../constants';
-
 const Home = () => {
-  const { isAdmin } = useAuth();
-  const [modals, setModals] = useState({
-    project: false,
-    timeline: false,
-    testimonial: false,
-    devlog: false
-  });
-
-  const toggleModal = (type, state) => setModals(prev => ({ ...prev, [type]: state }));
-
-  const handleCreate = async (endpoint, data, modalType) => {
-    try {
-      const res = await fetch(`${API_BASE}${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(data)
-      });
-      if (res.ok) {
-        toggleModal(modalType, false);
-        // Dispatch refresh event for components to reload data
-        window.dispatchEvent(new CustomEvent('content-updated'));
-      }
-    } catch (err) {
-      console.error(`Failed to create ${modalType}:`, err);
-    }
-  };
-
   const sectionVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -94,28 +54,6 @@ const Home = () => {
       <motion.div variants={itemVariants}><SystemSpecs /></motion.div>
       <motion.div variants={itemVariants}><ApiStatus /></motion.div>
       <motion.div variants={itemVariants}><Contact /></motion.div>
-
-
-          <AddProjectModal
-            isOpen={modals.project}
-            onClose={() => toggleModal('project', false)}
-            onSubmit={(data) => handleCreate('/api/projects', data, 'project')}
-          />
-          <AddTimelineModal
-            isOpen={modals.timeline}
-            onClose={() => toggleModal('timeline', false)}
-            onSubmit={(data) => handleCreate('/api/timeline', data, 'timeline')}
-          />
-          <AddTestimonialModal
-            isOpen={modals.testimonial}
-            onClose={() => toggleModal('testimonial', false)}
-            onSubmit={(data) => handleCreate('/api/testimonials', data, 'testimonial')}
-          />
-          <AddDevLogModal
-            isOpen={modals.devlog}
-            onClose={() => toggleModal('devlog', false)}
-            onSubmit={(data) => handleCreate('/api/devlogs', data, 'devlog')}
-          />
     </motion.div>
   );
 };

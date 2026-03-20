@@ -19,7 +19,7 @@ const ApiStatus = () => {
 
     const endpoints = [
         { name: 'Portfolio API', url: API_BASE, id: 'pallet' },
-        { name: 'GitHub Stats', url: `https://api.github.com/users/${githubUser}`, id: 'github' },
+        { name: 'GitHub Stats', url: `https://github.com/${githubUser}`, id: 'github' },
     ];
 
     const checkStatuses = async () => {
@@ -27,10 +27,19 @@ const ApiStatus = () => {
             try {
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 8000);
-                await fetch(ep.url, { signal: controller.signal });
+                
+                // Using 'no-cors' to avoid console noise for public services
+                // This will return an 'opaque' response if cross-origin
+                await fetch(ep.url, { 
+                    mode: 'no-cors', 
+                    signal: controller.signal,
+                    cache: 'no-cache' 
+                });
+                
                 clearTimeout(timeout);
+                // If we get here, the request was successful/reachable
                 setStatuses(prev => ({ ...prev, [ep.id]: 'online' }));
-            } catch {
+            } catch (err) {
                 setStatuses(prev => ({ ...prev, [ep.id]: 'offline' }));
             }
         }

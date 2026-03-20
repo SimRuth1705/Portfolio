@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   motion,
   useScroll,
@@ -43,6 +43,22 @@ const Navbar = ({
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  
+  const navRef = useRef(null);
+  useEffect(() => {
+    // Native Web Animations entrance
+    if (navRef.current) {
+      navRef.current.animate([
+        { transform: "translateY(-120px)" },
+        { transform: "translateY(0)" }
+      ], {
+        duration: 800,
+        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+        fill: "forwards"
+      });
+    }
+  }, []);
+
   const [logoClicks, setLogoClicks] = useState(0);
   const { isAdmin, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
@@ -116,8 +132,8 @@ const Navbar = ({
       y: 0,
       opacity: 1,
       transition: {
-        delay: 0.5 + i * 0.1,
-        duration: 0.5,
+        delay: 0.4 + i * 0.08,
+        duration: 0.6,
         ease: [0.16, 1, 0.3, 1],
       },
     }),
@@ -125,19 +141,18 @@ const Navbar = ({
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -120 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 w-full z-50 transition-all duration-500 px-4 sm:px-6 lg:px-10 ${scrolled
-          ? isDark
-            ? "bg-[#050505]/95 backdrop-blur-xl border-b border-white/[0.08] py-2.5 sm:py-3"
-            : "bg-[#f5f5f0]/95 backdrop-blur-xl border-b border-black/[0.08] py-2.5 sm:py-3"
-          : isDark
-            ? "bg-transparent border-b border-white/[0.03] py-3.5 sm:py-5"
-            : "bg-transparent border-b border-black/[0.03] py-3.5 sm:py-5"
-          }`}
-      >
+      <div className="fixed top-0 w-full z-50 pointer-events-none">
+        <nav
+          ref={navRef}
+          className={`w-full pointer-events-auto transition-all duration-500 px-4 sm:px-6 lg:px-10 ${scrolled
+            ? isDark
+              ? "bg-[#050505]/95 backdrop-blur-xl border-b border-white/[0.08] py-2.5 sm:py-3"
+              : "bg-[#f5f5f0]/95 backdrop-blur-xl border-b border-black/[0.08] py-2.5 sm:py-3"
+            : isDark
+              ? "bg-transparent border-b border-white/[0.03] py-3.5 sm:py-5"
+              : "bg-transparent border-b border-black/[0.03] py-3.5 sm:py-5"
+            }`}
+        >
         {/* Progress bar */}
         <motion.div
           className={`absolute bottom-0 left-0 h-px origin-left ${isDark ? "bg-white/30" : "bg-black/30"}`}
@@ -283,7 +298,8 @@ const Navbar = ({
             </button>
           </motion.div>
         </motion.div>
-      </motion.nav>
+        </nav>
+      </div>
 
       {/* Curtain Menu Overlay */}
       <AnimatePresence>
@@ -311,10 +327,10 @@ const Navbar = ({
               animate="open"
               exit="closed"
               transition={{ delay: 0.2, duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-              className={`fixed inset-0 z-[80] ${isDark ? "bg-[#050505]" : "bg-[#f5f5f0]"}`}
+              className={`fixed inset-0 z-[80] overflow-y-auto ${isDark ? "bg-[#050505]" : "bg-[#f5f5f0]"}`}
             >
               {/* Menu Content Container */}
-              <div className="h-full flex flex-col items-center justify-center py-10 sm:py-20 px-4 sm:px-10 relative">
+              <div className="min-h-full flex flex-col items-center justify-start py-20 px-6 sm:px-10 relative">
                 {/* Background Text */}
                 <motion.div
                   initial={{ opacity: 0, x: -100 }}
@@ -333,8 +349,8 @@ const Navbar = ({
                   <X size={24} className="sm:w-8 sm:h-8" />
                 </button>
 
-                {/* Navigation Links in Menu - Grid Layout for visibility */}
-                <div className="w-full max-w-5xl grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-y-4 sm:gap-y-8 gap-x-12 relative z-10 px-4">
+                {/* Navigation Links in Menu - Optimized Grid */}
+                <div className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-6 sm:gap-y-10 gap-x-8 sm:gap-x-20 relative z-10 px-4">
                   {MENU_ITEMS.map((item, i) => (
                     <motion.a
                       key={item.section}
@@ -345,19 +361,23 @@ const Navbar = ({
                       exit="closed"
                       href={`/#${item.section}`}
                       onClick={() => setMenuOpen(false)}
-                      className={`group relative flex flex-col items-center xs:items-start transition-all duration-500`}
+                      className="group relative flex flex-col items-start transition-all duration-500"
                     >
-                      <span className={`text-[8px] sm:text-[10px] font-mono mb-1 transition-opacity duration-300 ${isDark ? "text-zinc-600 group-hover:text-white" : "text-zinc-400 group-hover:text-black"}`}>
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div className="relative overflow-hidden">
-                        <span className={`block text-xl sm:text-2xl md:text-3xl font-display font-black tracking-tight uppercase transition-all duration-500 ${isDark ? "text-zinc-400 group-hover:text-white" : "text-zinc-500 group-hover:text-black"}`}>
-                          {item.label}
-                        </span>
-                        <motion.span
-                          className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-500 group-hover:w-full ${isDark ? "bg-white" : "bg-black"}`}
-                        />
-                      </div>
+                      <Magnetic strength={20}>
+                        <div className="flex flex-col items-start cursor-pointer">
+                          <span className={`text-[8px] sm:text-[9px] font-mono mb-1 transition-opacity duration-300 ${isDark ? "text-zinc-600 group-hover:text-white" : "text-zinc-400 group-hover:text-black"}`}>
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <div className="relative overflow-hidden py-1">
+                            <span className={`block text-lg sm:text-xl md:text-2xl lg:text-3xl font-display font-black tracking-tight uppercase transition-all duration-500 ${isDark ? "text-zinc-400 group-hover:text-white" : "text-zinc-500 group-hover:text-black"}`}>
+                              {item.label}
+                            </span>
+                            <motion.span
+                              className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-500 group-hover:w-full ${isDark ? "bg-white" : "bg-black"}`}
+                            />
+                          </div>
+                        </div>
+                      </Magnetic>
                     </motion.a>
                   ))}
                 </div>
@@ -402,61 +422,69 @@ const Navbar = ({
                   <div className={`h-px w-8 ${isDark ? "bg-white/20" : "bg-black/20"}`} />
                   
                   {/* SYSTEM_CONTROLS: Theme Toggle & Admin Actions */}
-                  <div className="flex flex-col items-center gap-8 w-full max-w-xl">
-                    <div className="flex items-center gap-6">
-                       <button
-                        onClick={toggleTheme}
-                        className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-500 group ${isDark ? "border-white/10 hover:border-white text-white" : "border-black/10 hover:border-black text-black"}`}
-                      >
-                        <AnimatePresence mode="wait">
-                          {isDark ? (
-                            <motion.div key="sun" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.3 }}>
-                              <Sun size={16} />
-                            </motion.div>
-                          ) : (
-                            <motion.div key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.3 }}>
-                              <Moon size={16} />
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                        <span className="font-mono text-[10px] uppercase tracking-[0.3em] font-bold">
-                          {isDark ? "Light_Mode" : "Dark_Mode"}
-                        </span>
-                      </button>
-
-                      {isAdmin && (
+                  <div className="flex flex-col items-center gap-10 w-full max-w-2xl px-4">
+                   <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
                         <button
-                          onClick={() => {
-                            setMenuOpen(false);
-                            navigate("/transmit");
-                          }}
-                          className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-500 group ${isDark ? "border-amber-500/20 text-amber-500 hover:border-amber-500" : "border-amber-600/20 text-amber-600 hover:border-amber-600"}`}
-                        >
-                          <Activity size={16} />
-                          <span className="font-mono text-[10px] uppercase tracking-[0.3em] font-bold">Transmissions</span>
-                        </button>
-                      )}
-                    </div>
+                         onClick={toggleTheme}
+                         className={`flex items-center justify-between sm:justify-center gap-4 px-8 py-4 border rounded-full transition-all duration-500 group w-full sm:w-auto ${isDark ? "border-white/10 hover:border-white text-white bg-white/5" : "border-black/10 hover:border-black text-black bg-black/5"}`}
+                       >
+                         <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-bold">
+                           Appearance
+                         </span>
+                         <div className="flex items-center gap-3">
+                           <AnimatePresence mode="wait">
+                             {isDark ? (
+                               <motion.div key="sun" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.3 }}>
+                                 <Sun size={15} />
+                               </motion.div>
+                             ) : (
+                               <motion.div key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.3 }}>
+                                 <Moon size={15} />
+                               </motion.div>
+                             )}
+                           </AnimatePresence>
+                           <span className={`text-[9px] font-mono opacity-60`}>
+                             {isDark ? "Light" : "Dark"}
+                           </span>
+                         </div>
+                       </button>
+ 
+                       {isAdmin && (
+                         <button
+                           onClick={() => {
+                             setMenuOpen(false);
+                             navigate("/transmit");
+                           }}
+                           className={`flex items-center justify-between sm:justify-center gap-4 px-8 py-4 border rounded-full transition-all duration-500 group w-full sm:w-auto ${isDark ? "border-amber-500/20 text-amber-500 hover:border-amber-500 bg-amber-500/5" : "border-amber-600/20 text-amber-600 hover:border-amber-600 bg-amber-600/5"}`}
+                         >
+                           <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-bold">Data Hub</span>
+                           <div className="flex items-center gap-2">
+                              <Activity size={15} />
+                              <span className="text-[9px] font-mono opacity-60 tracking-wider">Leads</span>
+                           </div>
+                         </button>
+                       )}
+                     </div>
 
                     {isAdmin && (
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full">
                         {[
                           { label: 'Project', icon: FolderPlus, onClick: onAddProject, color: 'hover:border-blue-500/40 text-blue-500' },
                           { label: 'Event', icon: Clock, onClick: onAddTimeline, color: 'hover:border-green-500/40 text-green-500' },
                           { label: 'Voices', icon: MessageSquarePlus, onClick: onAddTestimonial, color: 'hover:border-purple-500/40 text-purple-500' },
                           { label: 'Log', icon: Code, onClick: onAddDevLog, color: 'hover:border-orange-500/40 text-orange-500' },
                         ].map((action, i) => (
-                          <button
+                          <motion.button
                             key={i}
+                            layoutId={`${action.label.toLowerCase()}-modal-container`}
                             onClick={() => {
                               action.onClick?.();
-                              setMenuOpen(false);
                             }}
-                            className={`flex flex-col items-center justify-center p-4 border transition-all duration-300 ${isDark ? 'border-white/5 bg-white/[0.01]' : 'border-black/5 bg-black/[0.01]'} ${action.color}`}
+                            className={`flex flex-col items-center justify-center p-5 border rounded-xl ${isDark ? 'border-white/5 bg-white/5 hover:bg-white/10' : 'border-black/5 bg-black/5 hover:bg-black/10'} ${action.color} group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200`}
                           >
-                            <action.icon size={18} className="mb-2 opacity-60 group-hover:opacity-100" />
+                            <action.icon size={20} className="mb-2 opacity-60 group-hover:opacity-100 transition-opacity" />
                             <span className="text-[8px] font-mono uppercase tracking-widest">{action.label}</span>
-                          </button>
+                          </motion.button>
                         ))}
                       </div>
                     )}
