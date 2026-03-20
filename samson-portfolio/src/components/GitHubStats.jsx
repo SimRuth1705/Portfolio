@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Github, Star, GitCommit, Code2, GitFork, Users, ExternalLink, Activity } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import Editable from "./Editable";
+import { API_BASE } from "../constants";
 
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || "";
 
@@ -127,7 +128,7 @@ const GitHubStats = () => {
   useEffect(() => {
     const fetchUsername = async () => {
       try {
-        const res = await fetch(`${window.location.origin.replace('5173', '5006')}/api/content/github_username`);
+        const res = await fetch(`${API_BASE}/api/content/github_username`);
         if (res.ok) {
           const data = await res.json();
           if (data?.content) setGithubUser(data.content);
