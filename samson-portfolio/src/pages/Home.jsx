@@ -97,7 +97,7 @@ const Home = () => {
 
       {isAdmin && (
         <>
-          <div className="fixed bottom-24 right-8 z-10000">
+          <div className="fixed bottom-24 right-8 z-[9999]">
             <AdminSettingsButton
               onAddProject={() => toggleModal('project', true)}
               onAddTimeline={() => toggleModal('timeline', true)}

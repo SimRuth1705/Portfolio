@@ -29,3 +29,13 @@ def get_contacts(_=Depends(get_current_admin)):
         return [ContactOut(**item) for item in items]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/{id}")
+def delete_contact(id: str, _=Depends(get_current_admin)):
+    try:
+        result = db.contacts.delete_one({"_id": ObjectId(id)})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Transmission not found")
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

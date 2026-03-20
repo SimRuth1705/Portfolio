@@ -23,6 +23,8 @@ const AdminSettingsButton = ({
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  
+  console.log("[AdminSettingsButton] Rendered. isAdmin:", isAdmin);
 
   const menuItems = [
     {
@@ -110,7 +112,7 @@ const AdminSettingsButton = ({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className={`absolute bottom-full right-0 mb-4 w-64 rounded-2xl border shadow-2xl backdrop-blur-sm ${isDark ? "bg-[#050505] border-white/10" : "bg-[#f5f5f0] border-black/10"}`}
+              className={`absolute bottom-full right-0 mb-4 w-64 rounded-2xl border shadow-2xl backdrop-blur-sm z-50 ${isDark ? "bg-[#050505] border-white/10" : "bg-[#f5f5f0] border-black/10"}`}
             >
               {/* Header */}
               <div
