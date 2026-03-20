@@ -27,8 +27,8 @@ def login(data: LoginIn, response: Response):
         value=token,
         httponly=True,
         max_age=JWT_EXPIRE_HOURS * 3600,
-        samesite="lax",
-        secure=False, # Set to True in production with HTTPS
+        samesite="none",
+        secure=True,
         path="/"
     )
     
@@ -36,7 +36,7 @@ def login(data: LoginIn, response: Response):
 
 @router.post("/logout")
 def logout(response: Response):
-    response.delete_cookie("admin_token", path="/")
+    response.delete_cookie("admin_token", path="/", samesite="none", secure=True)
     return {"status": "success", "message": "Logged out"}
 
 @router.get("/me")

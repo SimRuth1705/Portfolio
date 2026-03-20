@@ -21,7 +21,9 @@ app.add_middleware(
         FRONTEND_URL,
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://samsonraj.vercel.app"
+        "https://samsonraj.vercel.app",
+        "https://www.samsonraj.in",
+        "https://samsonraj.in"
     ],
     allow_credentials=True,
     allow_methods=["*"],
