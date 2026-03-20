@@ -1,0 +1,27 @@
+# Frontend dependencies and builds
+samson-portfolio/node_modules/
+samson-portfolio/dist/
+samson-portfolio/dist-ssr/
+samson-portfolio/*.local
+samson-portfolio/.env
+
+# Backend dependencies and environment
+server/venv/
+server/__pycache__/
+server/*.pyc
+server/.env
+server/server_log.txt
+server/static/uploads/*
+!server/static/uploads/.gitkeep
+
+# System and Editor files
+.DS_Store
+.vscode/
+.idea/
+*.log
+npm-debug.log*
+yarn-debug.log*
+node_modules/
+dist/
+venv/
+.env

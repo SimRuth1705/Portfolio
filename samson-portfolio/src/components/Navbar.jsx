@@ -1,0 +1,411 @@
+import React, { useEffect, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/logo-seal.png";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
+import { LogOut, Shield, Command, Menu, X } from "lucide-react";
+import Editable from "./Editable";
+import Magnetic from "./Magnetic";
+
+const NAV_ITEMS = [
+  { label: "About", section: "about" },
+  { label: "Skills", section: "skills" },
+  { label: "Projects", section: "projects" },
+  { label: "Contact", section: "contact" },
+];
+
+const MENU_ITEMS = [
+  { label: "Home", section: "home" },
+  { label: "About", section: "about" },
+  { label: "Skills", section: "skills" },
+  { label: "Projects", section: "projects" },
+  { label: "Timeline", section: "timeline" },
+  { label: "Dev Log", section: "devlog" },
+  { label: "GitHub", section: "github" },
+  { label: "Lab", section: "lab" },
+  { label: "Specs", section: "specs" },
+  { label: "API Status", section: "api-status" },
+  { label: "Contact", section: "contact" },
+];
+
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [logoClicks, setLogoClicks] = useState(0);
+  const { isAdmin, logout } = useAuth();
+  const { isDark } = useTheme();
+  const navigate = useNavigate();
+
+  const { scrollY } = useScroll();
+
+  useEffect(() => {
+    const unsub = scrollY.on("change", (y) => {
+      setScrolled(y > 60);
+    });
+    return () => unsub();
+  }, [scrollY]);
+
+  useEffect(() => {
+    const sections = document.querySelectorAll("section[id]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveSection(e.target.id);
+        });
+      },
+      { rootMargin: "-40% 0px -55% 0px" },
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [menuOpen]);
+
+  const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.3 } },
+  };
+
+  const leftItemVariants = {
+    hidden: { opacity: 0, x: -40 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
+
+  const rightItemVariants = {
+    hidden: { opacity: 0, x: 40 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
+
+  const curtainVariants = {
+    closed: {
+      y: "-100%",
+      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
+    },
+    open: { y: "0%", transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } },
+  };
+
+  const itemVariants = {
+    closed: { y: 20, opacity: 0 },
+    open: (i) => ({
+      y: 0,
+      opacity: 1,
+      transition: {
+        delay: 0.5 + i * 0.1,
+        duration: 0.5,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    }),
+  };
+
+  return (
+    <>
+      <motion.nav
+        initial={{ y: -120 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed top-0 w-full z-50 transition-all duration-500 px-4 sm:px-6 lg:px-10 ${scrolled
+          ? isDark
+            ? "bg-[#050505]/95 backdrop-blur-xl border-b border-white/[0.08] py-2.5 sm:py-3"
+            : "bg-[#f5f5f0]/95 backdrop-blur-xl border-b border-black/[0.08] py-2.5 sm:py-3"
+          : isDark
+            ? "bg-transparent border-b border-white/[0.03] py-3.5 sm:py-5"
+            : "bg-transparent border-b border-black/[0.03] py-3.5 sm:py-5"
+          }`}
+      >
+        {/* Progress bar */}
+        <motion.div
+          className={`absolute bottom-0 left-0 h-px origin-left ${isDark ? "bg-white/30" : "bg-black/30"}`}
+          style={{ scaleX: useTransform(scrollY, [0, 5000], [0, 1]) }}
+        />
+
+        {/* Navbar Container */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-[1400px] mx-auto flex items-center justify-between gap-4"
+        >
+          {/* Logo Area */}
+          <motion.div
+            variants={leftItemVariants}
+            className={`flex-shrink-0 cursor-pointer lg:pr-6 lg:border-r ${isDark ? "border-white/5" : "border-black/5"}`}
+            onClick={() => {
+              // Always redirect to home on first click if not already there
+              if (window.location.pathname !== "/") {
+                navigate("/");
+              }
+              
+              const newCount = logoClicks + 1;
+              if (newCount >= 3) {
+                navigate("/vault");
+                setLogoClicks(0);
+              } else {
+                setLogoClicks(newCount);
+              }
+
+              // Reset clicks after 1 second of inactivity
+              setTimeout(() => setLogoClicks(0), 1000);
+            }}
+          >
+            <Magnetic strength={20}>
+              <div className="flex items-center gap-3 group">
+                <div className="relative">
+                  <img
+                    src={logo}
+                    alt="Logo"
+                    className={`w-8 h-8 sm:w-10 sm:h-10 object-contain group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 ${isDark ? "" : "invert"}`}
+                  />
+                  <div
+                    className={`absolute inset-0 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isDark ? "bg-white/10" : "bg-black/10"}`}
+                  ></div>
+                </div>
+                <div className="flex flex-col">
+                  <span
+                    className={`text-[10px] sm:text-[11px] font-display font-black tracking-[0.3em] sm:tracking-[0.4em] uppercase group-hover:tracking-[0.5em] transition-all duration-500 ${isDark ? "text-white" : "text-black"}`}
+                  >
+                    <Editable id="nav_logo_text" defaultContent="SAMSON" />
+                  </span>
+                  <span
+                    className={`text-[7px] sm:text-[8px] font-mono tracking-[0.2em] sm:tracking-[0.3em] uppercase transition-colors duration-300 ${isDark ? "text-zinc-600 group-hover:text-zinc-400" : "text-zinc-400 group-hover:text-zinc-600"}`}
+                  >
+                    <Editable id="nav_logo_sub" defaultContent="Full-Stack" />
+                  </span>
+                </div>
+              </div>
+            </Magnetic>
+          </motion.div>
+
+          {/* Desktop Nav Links - Only visible on LG+ */}
+          <motion.div
+            variants={rightItemVariants}
+            className="hidden lg:flex flex-grow justify-center gap-0"
+          >
+            {NAV_ITEMS.map((item, i) => (
+              <Magnetic key={item.section} strength={15}>
+                <a
+                  href={`/#${item.section}`}
+                  className={`relative px-4 xl:px-6 py-1 text-[10px] font-mono uppercase tracking-[0.3em] xl:tracking-[0.4em] transition-all duration-300 group border-r last:border-r-0 ${isDark ? "border-white/5" : "border-black/5"
+                    } ${activeSection === item.section
+                      ? isDark
+                        ? "text-white"
+                        : "text-black"
+                      : isDark
+                        ? "text-zinc-500 hover:text-zinc-200"
+                        : "text-zinc-400 hover:text-zinc-700"
+                    }`}
+                >
+                  <span
+                    className={`absolute top-1/2 left-1.5 -translate-y-1/2 w-1 h-1 rounded-full transition-all duration-300 ${isDark ? "bg-white" : "bg-black"} ${activeSection === item.section ? "opacity-100" : "opacity-0 group-hover:opacity-40"}`}
+                  ></span>
+                  <span
+                    className={`text-[8px] mr-2 transition-colors ${isDark ? "text-zinc-700 group-hover:text-zinc-500" : "text-zinc-300 group-hover:text-zinc-500"}`}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {item.label}
+                  <span
+                    className={`absolute bottom-0 left-0 w-0 h-px transition-all duration-400 group-hover:w-full ${isDark ? "bg-white/60" : "bg-black/60"}`}
+                  ></span>
+                </a>
+              </Magnetic>
+            ))}
+          </motion.div>
+
+          {/* Right Area: Status / Admin / Toggle */}
+          <motion.div
+            variants={rightItemVariants}
+            className="flex items-center gap-2 sm:gap-4"
+          >
+            {isAdmin ? (
+              <div className="hidden xl:flex items-center gap-4">
+                <Link
+                  to="/vault"
+                  className={`flex items-center gap-2 border px-3 py-1.5 transition-all duration-300 group ${isDark ? "border-white/20 bg-white/5 hover:border-white" : "border-black/20 bg-black/5 hover:border-black"}`}
+                >
+                  <Shield
+                    size={12}
+                    className={`transition-colors ${isDark ? "text-zinc-500 group-hover:text-white" : "text-zinc-400 group-hover:text-black"}`}
+                  />
+                  <span
+                    className={`font-mono text-[9px] uppercase tracking-widest ${isDark ? "text-white" : "text-black"}`}
+                  >
+                    Vault
+                  </span>
+                </Link>
+                <div
+                  onClick={logout}
+                  className="flex items-center gap-2 border border-red-500/20 bg-red-500/10 px-3 py-1.5 group cursor-pointer hover:bg-red-500 hover:text-white transition-all duration-300"
+                >
+                  <LogOut
+                    size={12}
+                    className="group-hover:rotate-12 transition-transform"
+                  />
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-red-500 group-hover:text-white">
+                    Exit
+                  </span>
+                </div>
+              </div>
+            ) : null}
+
+            {/* Always visible Menu Toggle */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className={`p-2 sm:p-2.5 rounded-full transition-all duration-300 ${isDark ? "bg-white/5 hover:bg-white/10 text-white" : "bg-black/5 hover:bg-black/10 text-black"}`}
+              aria-label="Toggle Menu"
+            >
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </motion.div>
+        </motion.div>
+      </motion.nav>
+
+      {/* Curtain Menu Overlay */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Curtain Layers */}
+            <motion.div
+              variants={curtainVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              className={`fixed inset-0 z-[60] backdrop-blur-md ${isDark ? "bg-zinc-800/30" : "bg-zinc-200/30"}`}
+            />
+            <motion.div
+              variants={curtainVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              transition={{ delay: 0.1, duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+              className={`fixed inset-0 z-[70] backdrop-blur-xl ${isDark ? "bg-zinc-900/60" : "bg-zinc-100/60"}`}
+            />
+            <motion.div
+              variants={curtainVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              transition={{ delay: 0.2, duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+              className={`fixed inset-0 z-[80] ${isDark ? "bg-[#050505]" : "bg-[#f5f5f0]"}`}
+            >
+              {/* Menu Content Container */}
+              <div className="h-full flex flex-col items-center justify-center py-10 sm:py-20 px-4 sm:px-10 relative">
+                {/* Background Text */}
+                <motion.div
+                  initial={{ opacity: 0, x: -100 }}
+                  animate={{ opacity: 0.02, x: 0 }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                  className={`absolute left-0 top-1/2 -translate-y-1/2 text-[30vw] font-display font-black tracking-tighter uppercase select-none pointer-events-none ${isDark ? "text-white" : "text-black"}`}
+                >
+                  Menu
+                </motion.div>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className={`absolute top-6 right-6 p-2 sm:p-4 rounded-full transition-all duration-300 z-[90] ${isDark ? "hover:bg-white/5 text-white" : "hover:bg-black/5 text-black"}`}
+                >
+                  <X size={24} className="sm:w-8 sm:h-8" />
+                </button>
+
+                {/* Navigation Links in Menu - Grid Layout for visibility */}
+                <div className="w-full max-w-5xl grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-y-4 sm:gap-y-8 gap-x-12 relative z-10 px-4">
+                  {MENU_ITEMS.map((item, i) => (
+                    <motion.a
+                      key={item.section}
+                      custom={i}
+                      variants={itemVariants}
+                      initial="closed"
+                      animate="open"
+                      exit="closed"
+                      href={`/#${item.section}`}
+                      onClick={() => setMenuOpen(false)}
+                      className={`group relative flex flex-col items-center xs:items-start transition-all duration-500`}
+                    >
+                      <span className={`text-[8px] sm:text-[10px] font-mono mb-1 transition-opacity duration-300 ${isDark ? "text-zinc-600 group-hover:text-white" : "text-zinc-400 group-hover:text-black"}`}>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div className="relative overflow-hidden">
+                        <span className={`block text-xl sm:text-2xl md:text-3xl font-display font-black tracking-tight uppercase transition-all duration-500 ${isDark ? "text-zinc-400 group-hover:text-white" : "text-zinc-500 group-hover:text-black"}`}>
+                          {item.label}
+                        </span>
+                        <motion.span
+                          className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-500 group-hover:w-full ${isDark ? "bg-white" : "bg-black"}`}
+                        />
+                      </div>
+                    </motion.a>
+                  ))}
+                </div>
+
+                {/* Mobile Admin Tools */}
+                {isAdmin && (
+                  <motion.div
+                    variants={itemVariants}
+                    custom={MENU_ITEMS.length}
+                    className={`mt-12 pt-8 border-t w-full max-w-xl flex flex-col xs:flex-row gap-4 relative z-10 ${isDark ? "border-white/5" : "border-black/5"}`}
+                  >
+                    <Link
+                      to="/vault"
+                      onClick={() => setMenuOpen(false)}
+                      className={`flex-1 flex items-center justify-center gap-3 border py-3 transition-all duration-300 ${isDark ? "border-white/10 hover:border-white text-white" : "border-black/10 hover:border-black text-black"}`}
+                    >
+                      <Shield size={14} />
+                      <span className="font-mono text-[10px] uppercase tracking-widest font-bold">Vault</span>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMenuOpen(false);
+                      }}
+                      className="flex-1 flex items-center justify-center gap-3 border border-red-500/20 bg-red-500/5 py-3 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
+                    >
+                      <LogOut size={14} />
+                      <span className="font-mono text-[10px] uppercase tracking-widest font-bold">Logout</span>
+                    </button>
+                  </motion.div>
+                )}
+
+                {/* Footer info in menu */}
+                <motion.div
+                  variants={itemVariants}
+                  custom={MENU_ITEMS.length + 2}
+                  initial="closed"
+                  animate="open"
+                  exit="closed"
+                  className="mt-12 flex flex-col items-center gap-4 relative z-10"
+                >
+                  <div className={`h-px w-8 ${isDark ? "bg-white/20" : "bg-black/20"}`} />
+                  <p className={`font-mono text-[8px] uppercase tracking-[0.4em] text-center ${isDark ? "text-zinc-600" : "text-zinc-400"}`}>
+                    SAMSON_OS V2.5
+                  </p>
+                </motion.div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+export default Navbar;

@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+  cursor: none;
+  /* Hides default cursor for our custom one */
+}
+
+body {
+  background-color: #050505;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+
+/* The Blueprint Grid - Simplified */
+.grid-background {
+  background-size: 100px 100px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+.grid-background-dark {
+  background-size: 100px 100px;
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+}
+
+/* Optional: Vertical "Section" lines to emphasize the wide layout */
+.section-line-left {
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-line-right {
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+/* Custom Scrollbar for Black/White aesthetic */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+
+/* Marquee Skills Animation — Forward */
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 40s linear infinite;
+}
+
+/* Marquee Skills Animation — Reverse */
+@keyframes infinite-scroll-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-infinite-scroll-reverse {
+  animation: infinite-scroll-reverse 50s linear infinite;
+}
+
+/* Dual Carousel Row Animations (Skills section) */
+@keyframes row-forward {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-33.33333%);
+  }
+}
+
+@keyframes row-reverse {
+  0% {
+    transform: translateX(-33.333333%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.row-scroll-forward {
+  animation-name: row-forward;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.row-scroll-reverse {
+  animation-name: row-reverse;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Base Body Styles */
+body {
+  background-color: #050505;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Skeleton shimmer sweep */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
