@@ -211,23 +211,41 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
                                     transition={{ delay: 1 }}
                                     className={`border-t pt-12 mt-4 flex flex-col sm:flex-row gap-6 ${isDark ? 'border-white/5' : 'border-black/5'}`}
                                 >
-                                    <a
-                                        href={project.github_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`flex items-center gap-3 border px-8 py-4 font-mono text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-300 group ${isDark
-                                                ? 'border-white/10 hover:bg-white hover:text-black hover:border-white'
-                                                : 'border-black/10 hover:bg-black hover:text-white hover:border-black'
-                                            }`}
-                                    >
-                                        <Github size={14} className="group-hover:rotate-12 transition-transform duration-300" />
-                                        View Repository
-                                        <ArrowUpRight size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-                                    </a>
+                                    {project?.github_url && (
+                                      <a
+                                          href={project.github_url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className={`flex items-center justify-center gap-3 border px-8 py-4 font-mono text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-300 group ${isDark
+                                                  ? 'border-white/10 hover:bg-white hover:text-black hover:border-white'
+                                                  : 'border-black/10 hover:bg-black hover:text-white hover:border-black'
+                                              }`}
+                                      >
+                                          <Github size={14} className="group-hover:rotate-12 transition-transform duration-300" />
+                                          View Repository
+                                          <ArrowUpRight size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                                      </a>
+                                    )}
+
+                                    {project?.live_url && (
+                                      <a
+                                          href={project.live_url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className={`flex items-center justify-center gap-3 border px-8 py-4 font-mono text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-300 group ${isDark
+                                                  ? 'border-white/10 hover:bg-white hover:text-black hover:border-white text-emerald-500 hover:text-black hover:border-emerald-500'
+                                                  : 'border-black/10 hover:bg-black hover:text-white hover:border-black text-emerald-600 hover:text-white hover:border-emerald-600'
+                                              }`}
+                                      >
+                                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                          Live Demo
+                                          <ArrowUpRight size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                                      </a>
+                                    )}
 
                                     <button
                                         onClick={onClose}
-                                        className={`flex items-center gap-3 border px-8 py-4 font-mono text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-300 ${isDark
+                                        className={`flex items-center justify-center gap-3 border px-8 py-4 font-mono text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-300 ${isDark
                                                 ? 'border-white/5 text-zinc-600 hover:text-white hover:border-white/20'
                                                 : 'border-black/5 text-zinc-400 hover:text-black hover:border-black/20'
                                             }`}

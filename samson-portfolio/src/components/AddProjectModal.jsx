@@ -8,12 +8,13 @@ import { API_BASE } from '../constants';
 const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
   const { isDark } = useTheme();
   const { showAlert } = useDialog();
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     image: '',
     repoLink: '',
-    category: '',
+    liveUrl: '',
     tech: '',
     problem: '',
     techChoice: '',
@@ -22,11 +23,42 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
 
   const [errors, setErrors] = useState({});
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const uploadData = new FormData();
+    uploadData.append('file', file);
+
+    try {
+      setIsUploading(true);
+      const token = localStorage.getItem('samson_admin_token');
+      const res = await fetch(`${API_BASE}/api/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: uploadData
+      });
+
+      if (!res.ok) throw new Error('Failed to upload image');
+      const data = await res.json();
+      
+      // The backend returns a relative URL like /static/uploads/filename
+      handleInputChange('image', data.url);
+      showAlert("Image uploaded successfully!", "success");
+    } catch (err) {
+      console.error(err);
+      showAlert("Failed to upload image. Please try again.", "error");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
-    if (!formData.category.trim()) newErrors.category = "Category is required";
     if (!formData.tech.trim()) newErrors.tech = "At least one technology is required";
 
     setErrors(newErrors);
@@ -43,7 +75,7 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
       image: formData.image.trim() || '/api/placeholder/1200/800',
       tags: formData.tech.split(',').map(t => t.trim()).filter(t => t),
       github_url: formData.repoLink.trim(),
-      live_url: '',
+      live_url: formData.liveUrl.trim(),
       problem: formData.problem.trim(),
       tech_choice: formData.techChoice.trim(),
       outcome: formData.outcome.trim()
@@ -56,7 +88,7 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
       description: '',
       image: '',
       repoLink: '',
-      category: '',
+      liveUrl: '',
       tech: '',
       problem: '',
       techChoice: '',
@@ -115,20 +147,96 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
                 />
               </div>
               <div>
-                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Category</label>
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Tech Stack (comma separated) *</label>
                 <input
                   type="text"
-                  value={formData.category}
-                  onChange={(e) => handleInputChange('category', e.target.value)}
+                  required
+                  placeholder="React, Node.js, MongoDB"
+                  value={formData.tech}
+                  onChange={(e) => handleInputChange('tech', e.target.value)}
                   className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
                 />
               </div>
+
+              <div>
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>GitHub Repo URL</label>
+                <input
+                  type="text"
+                  value={formData.repoLink}
+                  onChange={(e) => handleInputChange('repoLink', e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Live Demo URL</label>
+                <input
+                  type="text"
+                  value={formData.liveUrl}
+                  onChange={(e) => handleInputChange('liveUrl', e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
+                />
+              </div>
+
               <div className="md:col-span-2">
-                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Description</label>
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Image Cover</label>
+                <div className="flex flex-col sm:flex-row gap-4 mb-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                    className={`block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold transition-all duration-300 ${isDark 
+                      ? 'file:bg-white/10 file:text-white hover:file:bg-white/20 text-zinc-400' 
+                      : 'file:bg-black/5 file:text-black hover:file:bg-black/10 text-zinc-600'}`}
+                  />
+                  {isUploading && <span className="text-sm font-mono text-emerald-500 animate-pulse flex items-center">Uploading...</span>}
+                </div>
+                <input
+                  type="text"
+                  placeholder="Or paste an image URL here (https://example.com/image.jpg)"
+                  value={formData.image}
+                  onChange={(e) => handleInputChange('image', e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Description *</label>
                 <textarea
+                  required
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
-                  rows={3}
+                  rows={2}
+                  className={`w-full px-4 py-3 rounded-lg border transition-colors resize-none ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>The Problem Statement</label>
+                <textarea
+                  value={formData.problem}
+                  onChange={(e) => handleInputChange('problem', e.target.value)}
+                  rows={2}
+                  className={`w-full px-4 py-3 rounded-lg border transition-colors resize-none ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Tech Choices & Architecture</label>
+                <textarea
+                  value={formData.techChoice}
+                  onChange={(e) => handleInputChange('techChoice', e.target.value)}
+                  rows={2}
+                  className={`w-full px-4 py-3 rounded-lg border transition-colors resize-none ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Project Outcome</label>
+                <textarea
+                  value={formData.outcome}
+                  onChange={(e) => handleInputChange('outcome', e.target.value)}
+                  rows={2}
                   className={`w-full px-4 py-3 rounded-lg border transition-colors resize-none ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
                 />
               </div>
@@ -137,9 +245,10 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
             <div className="flex justify-end pt-6">
               <button
                 type="submit"
-                className={`px-8 py-3 rounded-lg font-mono uppercase tracking-widest transition-all duration-300 ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
+                disabled={isUploading}
+                className={`px-8 py-3 rounded-lg font-mono uppercase tracking-widest transition-all duration-300 ${isUploading ? 'opacity-50 cursor-not-allowed text-zinc-500 bg-zinc-800' : isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
               >
-                Create Project
+                {isUploading ? 'Uploading...' : 'Create Project'}
               </button>
             </div>
           </form>
