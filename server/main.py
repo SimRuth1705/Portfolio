@@ -45,6 +45,7 @@ app.include_router(vault.router)
 app.include_router(upload.router)
 
 @app.get("/")
+@app.head("/")
 async def root():
     return {"status": "online", "message": "Samson Portfolio API is active"}
 
