@@ -1,19 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
 
 const CustomCursor = () => {
+  const { isDark } = useTheme();
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  // References to the DOM elements
-  const ringRef = useRef(null);
-  const dotRef = useRef(null);
-  const reqRef = useRef(null);
-
-  // State to hold cursor position targets and current positions for lerping
-  const targetPos = useRef({ x: -100, y: -100 });
-  const currentPos = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
     const checkMobile = () => {
@@ -24,34 +18,30 @@ const CustomCursor = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Motion Values
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  const ringX = useMotionValue(-100);
+  const ringY = useMotionValue(-100);
+
+  const springConfig = { damping: 25, stiffness: 200, mass: 0.1 };
+  const ringXSpring = useSpring(ringX, springConfig);
+  const ringYSpring = useSpring(ringY, springConfig);
+
   useEffect(() => {
     if (isMobile) return;
 
-    // The single animation loop that interpolates both elements
-    const updateCursor = () => {
-      // Linear interpolation (lerp) for the Spring effect
-      currentPos.current.x += (targetPos.current.x - currentPos.current.x) * 0.15;
-      currentPos.current.y += (targetPos.current.y - currentPos.current.y) * 0.15;
-
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${currentPos.current.x - 16}px, ${currentPos.current.y - 16}px, 0)`;
-      }
-      
-      // The dot perfectly follows the mouse (no spring)
-      if (dotRef.current) {
-         dotRef.current.style.transform = `translate3d(${targetPos.current.x - 4}px, ${targetPos.current.y - 4}px, 0)`;
-      }
-
-      reqRef.current = requestAnimationFrame(updateCursor);
-    };
-    reqRef.current = requestAnimationFrame(updateCursor);
-
     const moveCursor = (e) => {
-      targetPos.current.x = e.clientX;
-      targetPos.current.y = e.clientY;
+      cursorX.set(e.clientX - 4);
+      cursorY.set(e.clientY - 4);
+      ringX.set(e.clientX - 16);
+      ringY.set(e.clientY - 16);
 
-      const isHoverable = e.target.closest('a, button, input, textarea, [data-hover="true"]');
-      setIsHovering(!!isHoverable);
+      // Ensure cursor becomes visible if moving inside the window
+      setIsVisible(prev => !prev ? true : prev);
+
+      const isHoverable = !!e.target.closest('a, button, input, textarea, [data-hover="true"], [class*="cursor-pointer"]');
+      setIsHovering(prev => prev !== isHoverable ? isHoverable : prev);
     };
 
     const handleMouseEnter = () => setIsVisible(true);
@@ -66,14 +56,13 @@ const CustomCursor = () => {
     window.addEventListener("mouseup", handleMouseUp);
 
     return () => {
-      cancelAnimationFrame(reqRef.current);
       window.removeEventListener("mousemove", moveCursor);
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseleave", handleMouseLeave);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isMobile]);
+  }, [cursorX, cursorY, ringX, ringY, isMobile]);
 
   useEffect(() => {
     if (isMobile) return;
@@ -85,42 +74,43 @@ const CustomCursor = () => {
 
   if (isMobile) return null;
 
-  // Derive CSS variables for the states
-  let ringScale = 1;
-  if (isClicking) ringScale = 0.8;
-  else if (isHovering) ringScale = 2;
-  
-  const ringBg = isHovering ? "white" : "transparent";
-  const ringOpacity = isVisible ? 1 : 0;
-  const dotOpacity = isVisible && !isHovering ? 1 : 0;
-
   return (
-    <div className="fixed inset-0 pointer-events-none z-[100000]">
-      {/* The Spring Ring */}
-      <div
-        ref={ringRef}
-        className="absolute top-0 left-0 w-8 h-8 rounded-full will-change-transform"
+    <div className="fixed inset-0 pointer-events-none z-[100000]" style={{ mixBlendMode: "difference" }}>
+      {/* 1. OUTER RING */}
+      <motion.div
+        layoutRoot
+        className="absolute top-0 left-0 w-8 h-8 rounded-full pointer-events-none"
         style={{
+          x: ringXSpring,
+          y: ringYSpring,
           border: `1px solid white`,
-          mixBlendMode: "difference",
-          opacity: ringOpacity,
-          backgroundColor: ringBg,
-          transition: "opacity 0.2s ease, transform 0s, background-color 0.2s ease, scale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-          scale: ringScale,
-          transformOrigin: 'center center' // Ensure scale happens from the center
+        }}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{
+          opacity: isVisible ? 1 : 0,
+          scale: isClicking ? 0.8 : isHovering ? 2 : 1,
+          backgroundColor: isHovering ? "white" : "transparent",
+        }}
+        transition={{
+          scale: { type: "spring", stiffness: 400, damping: 25 },
+          opacity: { duration: 0.2 },
         }}
       />
 
-      {/* The Exact Mouse Dot */}
-      <div
-        ref={dotRef}
-        className="absolute top-0 left-0 w-2 h-2 rounded-full will-change-transform"
+      {/* 2. INNER DOT */}
+      <motion.div
+        layoutRoot
+        className="absolute top-0 left-0 w-2 h-2 rounded-full pointer-events-none"
         style={{
+          x: cursorX,
+          y: cursorY,
           backgroundColor: "white",
-          mixBlendMode: "difference",
-          opacity: dotOpacity,
-          transition: "opacity 0.1s ease, transform 0s",
         }}
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: isVisible && !isHovering ? 1 : 0,
+        }}
+        transition={{ duration: 0.1 }}
       />
     </div>
   );
