@@ -61,7 +61,7 @@ body {
 }
 
 .noise-overlay {
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  background-image: url(/noise.svg);
   filter: contrast(170%) brightness(100%);
 }
 
@@ -72,7 +72,7 @@ body {
   left: -100%;
   width: 300%;
   height: 300%;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  background-image: url(/noise.svg);
 }
 
 @keyframes noise {

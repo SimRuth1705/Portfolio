@@ -45,6 +45,15 @@ const Skeleton = ({ isLightMode }) => (
   </div>
 );
 
+const getDirectImageUrl = (url) => {
+  if (!url) return "";
+  if (url.includes("drive.google.com")) {
+    const match = url.match(/\/d\/([-\w]{25,})/) || url.match(/[?&]id=([-\w]{25,})/);
+    if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+  }
+  return url;
+};
+
 const ProjectCard = ({ project, isOffset, isLightMode, onOpen, onDelete }) => {
   const { isAdmin } = useAuth();
   const cardRef = useRef(null);
@@ -143,7 +152,7 @@ const ProjectCard = ({ project, isOffset, isLightMode, onOpen, onDelete }) => {
 
         {/* Actual image */}
         <motion.img
-          src={project.image}
+          src={getDirectImageUrl(project.image)}
           alt={project.title}
           style={{ y: yImage }}
           onLoad={() => setImageLoaded(true)}

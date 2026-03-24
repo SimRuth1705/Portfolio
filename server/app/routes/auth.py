@@ -1,8 +1,9 @@
 import bcrypt
-from fastapi import APIRouter, HTTPException, Response, Depends
+from fastapi import APIRouter, HTTPException, Response, Depends, Request
 from app.models import LoginIn
 from app.auth import create_access_token, get_current_admin
-from app.config import ADMIN_PASSWORD_HASH, JWT_EXPIRE_HOURS
+from app.config import ADMIN_PASSWORD_HASH, JWT_EXPIRE_HOURS, JWT_SECRET, JWT_ALGORITHM
+from jose import jwt
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -40,5 +41,14 @@ def logout(response: Response):
     return {"status": "success", "message": "Logged out"}
 
 @router.get("/me")
-def get_me(admin=Depends(get_current_admin)):
-    return {"isAdmin": True}
+def get_me(request: Request):
+    token = request.cookies.get("admin_token")
+    if not token:
+        return {"isAdmin": False}
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        if payload.get("role") == "admin":
+            return {"isAdmin": True}
+    except:
+        pass
+    return {"isAdmin": False}

@@ -5,6 +5,15 @@ import { useTheme } from '../context/ThemeContext';
 import { useDialog } from '../context/DialogContext';
 import { API_BASE } from '../constants';
 
+const getDirectImageUrl = (url) => {
+  if (!url) return "";
+  if (url.includes("drive.google.com")) {
+    const match = url.match(/\/d\/([-\w]{25,})/) || url.match(/[?&]id=([-\w]{25,})/);
+    if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+  }
+  return url;
+};
+
 const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
   const { isDark } = useTheme();
   const { showAlert } = useDialog();
@@ -18,7 +27,8 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
     tech: '',
     problem: '',
     techChoice: '',
-    outcome: ''
+    outcome: '',
+    category: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -35,9 +45,7 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
       const token = localStorage.getItem('samson_admin_token');
       const res = await fetch(`${API_BASE}/api/upload`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+        credentials: 'include',
         body: uploadData
       });
 
@@ -72,13 +80,14 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
     const projectData = {
       title: formData.title.trim(),
       description: formData.description.trim(),
-      image: formData.image.trim() || '/api/placeholder/1200/800',
+      image: getDirectImageUrl(formData.image.trim()) || '/api/placeholder/1200/800',
       tags: formData.tech.split(',').map(t => t.trim()).filter(t => t),
       github_url: formData.repoLink.trim(),
       live_url: formData.liveUrl.trim(),
       problem: formData.problem.trim(),
       tech_choice: formData.techChoice.trim(),
-      outcome: formData.outcome.trim()
+      outcome: formData.outcome.trim(),
+      category: formData.category.trim() || "Project"
     };
 
     onSubmit(projectData);
@@ -92,7 +101,8 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
       tech: '',
       problem: '',
       techChoice: '',
-      outcome: ''
+      outcome: '',
+      category: ''
     });
     setErrors({});
   };
@@ -143,6 +153,16 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
                   required
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
+                  className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-mono uppercase tracking-widest mb-2 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Category / Head</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Full Stack, AI Project"
+                  value={formData.category}
+                  onChange={(e) => handleInputChange('category', e.target.value)}
                   className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
                 />
               </div>
@@ -198,6 +218,22 @@ const AddProjectModal = ({ isOpen, onClose, onSubmit }) => {
                   onChange={(e) => handleInputChange('image', e.target.value)}
                   className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-black/5 border-black/10 text-black'}`}
                 />
+                {formData.image && (
+                  <div className="mt-4 aspect-video rounded-lg overflow-hidden border border-white/10 bg-black/20 relative group">
+                    <img
+                      src={getDirectImageUrl(formData.image)}
+                      alt="Preview"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      onError={(e) => {
+                        e.target.src = '/api/placeholder/1200/800';
+                        e.target.className = "w-full h-full object-cover opacity-20 grayscale";
+                      }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                       <span className="text-[10px] font-mono text-white/60">LIVE PREVIEW</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="md:col-span-2">

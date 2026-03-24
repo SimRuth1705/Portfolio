@@ -78,9 +78,9 @@ const CustomCursor = () => {
     <div className="fixed inset-0 pointer-events-none z-[100000]" style={{ mixBlendMode: "difference" }}>
       {/* 1. OUTER RING */}
       <motion.div
-        layoutRoot
         className="absolute top-0 left-0 w-8 h-8 rounded-full pointer-events-none"
         style={{
+          position: 'absolute',
           x: ringXSpring,
           y: ringYSpring,
           border: `1px solid white`,
@@ -99,9 +99,9 @@ const CustomCursor = () => {
 
       {/* 2. INNER DOT */}
       <motion.div
-        layoutRoot
         className="absolute top-0 left-0 w-2 h-2 rounded-full pointer-events-none"
         style={{
+          position: 'absolute',
           x: cursorX,
           y: cursorY,
           backgroundColor: "white",

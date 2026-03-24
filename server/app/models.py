@@ -18,6 +18,7 @@ class ProjectIn(BaseModel):
     problem: Optional[str] = None
     tech_choice: Optional[str] = None
     outcome: Optional[str] = None
+    category: Optional[str] = "Project"
 
 class TimelineIn(BaseModel):
     year: str
@@ -64,6 +65,7 @@ class ProjectOut(BaseModel):
     problem: Optional[str] = None
     tech_choice: Optional[str] = None
     outcome: Optional[str] = None
+    category: Optional[str] = "Project"
 
 class TimelineOut(BaseModel):
     id: str
