@@ -3,6 +3,7 @@ import { motion, LayoutGroup } from "framer-motion";
 import ProjectCard from "./ProjectCard";
 import ProjectModal from "./ProjectModal";
 import AddProjectModal from "./AddProjectModal";
+import EditProjectModal from "./EditProjectModal";
 import AdminSettingsButton from "./AdminSettingsButton";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
@@ -15,6 +16,7 @@ const Projects = () => {
   const { isAdmin } = useAuth();
   const { showAlert, showConfirm } = useDialog();
   const [selectedProject, setSelectedProject] = useState(null);
+  const [editingProject, setEditingProject] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +37,31 @@ const Projects = () => {
       }
     } catch {
       showAlert("Failed to delete project. Please try again.");
+    }
+  };
+
+  const handleUpdateProject = async (projectData) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/projects/${editingProject.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(projectData),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setProjects((prev) =>
+          prev.map((p) => (p.id === editingProject.id ? updated : p))
+        );
+        showAlert("Project updated successfully!", "success");
+      } else {
+        showAlert("Failed to update project. Please try again.");
+      }
+    } catch (err) {
+      console.error("Update error:", err);
+      showAlert("Failed to update project. Please try again.");
     }
   };
 
@@ -143,6 +170,7 @@ const Projects = () => {
                   isLightMode={!isDark}
                   onOpen={() => setSelectedProject(project)}
                   onDelete={() => handleDeleteProject(project.id)}
+                  onEdit={() => setEditingProject(project)}
                 />
               ))}
             </div>
@@ -154,6 +182,13 @@ const Projects = () => {
         project={selectedProject}
         isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
+      />
+
+      <EditProjectModal
+        project={editingProject}
+        isOpen={!!editingProject}
+        onClose={() => setEditingProject(null)}
+        onSubmit={handleUpdateProject}
       />
     </LayoutGroup>
   );

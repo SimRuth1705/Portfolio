@@ -5,12 +5,14 @@ import Editable from './Editable';
 import { useTheme } from '../context/ThemeContext';
 import { useDialog } from '../context/DialogContext';
 import { API_BASE } from '../constants';
+import SuccessOverlay from './SuccessOverlay';
 
 const Contact = () => {
     const { isDark } = useTheme();
     const { showAlert } = useDialog();
     const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
     const [submitStatus, setSubmitStatus] = useState('idle'); // idle | sending | success | error
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const fadeInUp = {
         hidden: { opacity: 0, y: 40 },
@@ -71,8 +73,8 @@ const Contact = () => {
             });
             if (res.ok) {
                 setSubmitStatus('success');
-                showAlert("Transmission received. I've decoded your request and will be in touch shortly.", "Secure Link Established");
                 setForm({ name: '', email: '', phone: '', message: '' });
+                setShowSuccess(true);
                 setTimeout(() => setSubmitStatus('idle'), 5000);
             } else {
                 setSubmitStatus('error-api');
@@ -87,6 +89,8 @@ const Contact = () => {
     };
 
     return (
+        <>
+        <SuccessOverlay isOpen={showSuccess} onClose={() => setShowSuccess(false)} />
         <section id="contact" className={`py-28 sm:py-32 md:py-60 relative flex flex-col items-center transition-colors duration-700 ${bg}`}>
             <div className={`absolute inset-0 ${gridBg} opacity-20 pointer-events-none w-full`}></div>
             <div className={`fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[1400px] border-x ${borderCol} pointer-events-none z-0`}></div>
@@ -262,6 +266,7 @@ const Contact = () => {
                 </motion.form>
             </div>
         </section>
+        </>
     );
 };
 

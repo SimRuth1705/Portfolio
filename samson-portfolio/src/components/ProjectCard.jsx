@@ -54,7 +54,7 @@ const getDirectImageUrl = (url) => {
   return url;
 };
 
-const ProjectCard = ({ project, isOffset, isLightMode, onOpen, onDelete }) => {
+const ProjectCard = ({ project, isOffset, isLightMode, onOpen, onDelete, onEdit }) => {
   const { isAdmin } = useAuth();
   const cardRef = useRef(null);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -208,19 +208,32 @@ const ProjectCard = ({ project, isOffset, isLightMode, onOpen, onDelete }) => {
             </a>
           </div>
         </div>
-        {/* Admin Delete Button */}
-        {isAdmin && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className={`p-2 rounded transition-colors duration-300 mr-2 ${isLightMode ? "bg-red-500/20 text-red-500 hover:bg-red-500/30 hover:text-red-400" : "bg-red-500/20 text-red-600 hover:bg-red-500/30 hover:text-red-700"}`}
-            title="Delete project"
-          >
-            <Trash2 size={16} />
-          </button>
-        )}
+        <div className="flex gap-2">
+          {isAdmin && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                }}
+                className={`p-2 rounded transition-colors duration-300 ${isLightMode ? "bg-blue-500/20 text-blue-500 hover:bg-blue-500/30 hover:text-blue-400" : "bg-blue-500/20 text-blue-600 hover:bg-blue-500/30 hover:text-blue-700"}`}
+                title="Edit project"
+              >
+                <Edit2 size={16} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
+                className={`p-2 rounded transition-colors duration-300 ${isLightMode ? "bg-red-500/20 text-red-500 hover:bg-red-500/30 hover:text-red-400" : "bg-red-500/20 text-red-600 hover:bg-red-500/30 hover:text-red-700"}`}
+                title="Delete project"
+              >
+                <Trash2 size={16} />
+              </button>
+            </>
+          )}
+        </div>
         <div className="relative">
           <ArrowUpRight
             className={`transition-all duration-500 group-hover:rotate-45 ${isLightMode

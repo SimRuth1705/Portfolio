@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Editable from './Editable';
-import heroImg from '../assets/hero.png';
+import heroImg from '../assets/hero.jpeg';
 import { Phone, Mail, Twitter, Linkedin } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import TextReveal from './TextReveal';

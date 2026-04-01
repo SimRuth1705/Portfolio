@@ -4,18 +4,18 @@ from app.database import db
 
 def seed_data():
     try:
-        db.projects.delete_many({})
-        db.projects.insert_one({
-            "title": "Pallet",
-            "description": "A full-stack portfolio application built with MERN stack",
-            "tech": ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
-            "tags": ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
-            "image": "/images/hero.png",
-            "category": "Full Stack",
-            "live_url": "https://portfolio.example.com",
-            "repoLink": "https://github.com/samsonraj/mern-portfolio",
-            "github_url": "https://github.com/samsonraj/mern-portfolio",
-        })
+        if db.projects.count_documents({}) == 0:
+            db.projects.insert_one({
+                "title": "Pallet",
+                "description": "A full-stack portfolio application built with MERN stack",
+                "tech": ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
+                "tags": ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
+                "image": "/images/hero.png",
+                "category": "Full Stack",
+                "live_url": "https://portfolio.example.com",
+                "repoLink": "https://github.com/samsonraj/mern-portfolio",
+                "github_url": "https://github.com/samsonraj/mern-portfolio",
+            })
         if db.timeline.count_documents({}) == 0:
             db.timeline.insert_many([
                 {"year": "2024", "title": "Started MERN Portfolio", "description": "Began development of portfolio application using MERN stack", "type": "project"},

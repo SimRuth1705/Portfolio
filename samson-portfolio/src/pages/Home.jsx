@@ -43,17 +43,17 @@ const Home = () => {
       variants={sectionVariants}
       className="relative z-10"
     >
-      <motion.div variants={itemVariants}><Hero /></motion.div>
-      <motion.div variants={itemVariants}><About /></motion.div>
-      <motion.div variants={itemVariants}><Skills /></motion.div>
-      <motion.div variants={itemVariants}><Projects /></motion.div>
-      <motion.div variants={itemVariants}><Timeline /></motion.div>
-      <motion.div variants={itemVariants}><GitHubStats /></motion.div>
-      <motion.div variants={itemVariants}><DevLog /></motion.div>
-      <motion.div variants={itemVariants}><Lab /></motion.div>
-      <motion.div variants={itemVariants}><SystemSpecs /></motion.div>
-      <motion.div variants={itemVariants}><ApiStatus /></motion.div>
-      <motion.div variants={itemVariants}><Contact /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><Hero /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><About /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><Skills /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><Projects /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><Timeline /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><GitHubStats /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><DevLog /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><Lab /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><SystemSpecs /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><ApiStatus /></motion.div>
+      <motion.div className="relative" variants={itemVariants}><Contact /></motion.div>
     </motion.div>
   );
 };
