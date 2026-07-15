@@ -7,7 +7,7 @@ import { API_BASE } from "../constants";
 
 // Request unauthenticated GitHub API to prevent token leak in bundle.
 
-const StatCard = ({ icon, label, value, isDark, delay }) => (
+const StatCard = React.memo(({ icon, label, value, isDark, delay }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -25,9 +25,9 @@ const StatCard = ({ icon, label, value, isDark, delay }) => (
       </div>
     </div>
   </motion.div>
-);
+));
 
-const RepoCard = ({ repo, isDark, delay }) => (
+const RepoCard = React.memo(({ repo, isDark, delay }) => (
   <motion.a
     href={repo.html_url}
     target="_blank"
@@ -62,9 +62,9 @@ const RepoCard = ({ repo, isDark, delay }) => (
       </div>
     </div>
   </motion.a>
-);
+));
 
-const ActivityItem = ({ event, isDark, delay }) => {
+const ActivityItem = React.memo(({ event, isDark, delay }) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
@@ -88,7 +88,7 @@ const ActivityItem = ({ event, isDark, delay }) => {
       </div>
     </motion.div>
   );
-};
+});
 
 const LanguageBar = ({ name, percentage, color, isDark }) => (
   <div className="flex items-center gap-3 mb-3">
@@ -233,7 +233,7 @@ const GitHubStats = () => {
         {/* Header */}
         <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
           <div>
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} className="flex items-center gap-3 mb-4">
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="flex items-center gap-3 mb-4">
               <span className={`absolute top-6 sm:top-8 md:top-10 left-4 sm:left-6 md:left-10 text-[10px] font-mono ${isDark ? "text-zinc-600" : "text-zinc-500"}`}>
                 [ 05. NETWORK ]
               </span>
@@ -243,7 +243,7 @@ const GitHubStats = () => {
               </span>
               <div className="w-2 h-2 rounded-full bg-[#2ea043] animate-pulse" />
             </motion.div>
-            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} className={`text-6xl md:text-9xl font-display font-black uppercase ${isDark ? "text-white" : "text-black"} flex flex-wrap gap-4 items-baseline`}>
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className={`text-6xl md:text-9xl font-display font-black uppercase ${isDark ? "text-white" : "text-black"} flex flex-wrap gap-4 items-baseline`}>
               <Editable id="github_title" defaultContent="GITHUB FEED" />
               <div className="flex items-baseline gap-2">
                 <span className={`text-3xl md:text-5xl font-mono lowercase tracking-tighter ${isDark ? "text-white/20" : "text-black/10"}`}>@</span>
@@ -287,7 +287,7 @@ const GitHubStats = () => {
 
           <div className="lg:col-span-4">
             <div className="space-y-12">
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className={`p-8 border ${isDark ? "border-white/5 bg-white/[0.01]" : "border-black/5 bg-black/[0.01]"}`}>
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className={`p-8 border ${isDark ? "border-white/5 bg-white/[0.01]" : "border-black/5 bg-black/[0.01]"}`}>
                 <h3 className={`text-[10px] font-mono uppercase tracking-[0.4em] mb-8 ${isDark ? "text-zinc-600" : "text-zinc-400"}`}>Stack_Weight</h3>
                 {dynamicLanguages ? dynamicLanguages.map((lang) => (
                   <LanguageBar key={lang.name} {...lang} isDark={isDark} />

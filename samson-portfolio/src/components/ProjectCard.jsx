@@ -156,6 +156,7 @@ const ProjectCard = ({ project, isOffset, isLightMode, onOpen, onDelete, onEdit 
           alt={project.title}
           style={{ y: yImage }}
           loading="lazy"
+          decoding="async"
           onLoad={() => setImageLoaded(true)}
           className={`w-full h-full scale-110 object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-[1s] ease-out ${imageLoaded ? "" : "opacity-0"
             }`}
@@ -249,4 +250,4 @@ const ProjectCard = ({ project, isOffset, isLightMode, onOpen, onDelete, onEdit 
   );
 };
 
-export default ProjectCard;
+export default React.memo(ProjectCard);

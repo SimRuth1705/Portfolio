@@ -4,9 +4,9 @@ import LazySection from '../components/LazySection';
 
 // Above the fold components are loaded synchronously
 import Hero from '../components/Hero';
-import About from '../components/About';
 
 // Below the fold components are lazy loaded
+const About = lazy(() => import('../components/About'));
 const Skills = lazy(() => import('../components/Skills'));
 const Projects = lazy(() => import('../components/Projects'));
 const Timeline = lazy(() => import('../components/Timeline'));
@@ -49,7 +49,13 @@ const Home = () => {
       className="relative z-10"
     >
       <motion.div className="relative" variants={itemVariants}><Hero /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><About /></motion.div>
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <About />
+          </LazySection>
+        </Suspense>
+      </motion.div>
       
       <motion.div className="relative" variants={itemVariants}>
         <Suspense fallback={<Fallback />}>

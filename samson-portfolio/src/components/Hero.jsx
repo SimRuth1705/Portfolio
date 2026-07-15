@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Editable from './Editable';
 const heroImg = "/images/hero.webp";
@@ -13,6 +13,11 @@ const Hero = () => {
     const opacityHero = useTransform(heroScroll, [0, 0.8], [1, 0]);
     const skewHero = useTransform(heroScroll, [0, 0.5], [0, 5]);
     const { isDark } = useTheme();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const fadeInUp = {
         hidden: { opacity: 0, y: 60 },
@@ -30,12 +35,16 @@ const Hero = () => {
             className={`relative min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-10 border-b overflow-hidden transition-colors duration-700 ${isDark ? 'border-white/20' : 'border-black/10'}`}
         >
             {/* Ambient Background Elements (Static for Performance) */}
-            <div
-                className={`absolute top-1/4 left-1/4 w-96 h-96 blur-[150px] rounded-full mix-blend-screen pointer-events-none opacity-50 ${isDark ? 'bg-white/10' : 'bg-black/5'}`}
-            />
-            <div
-                className={`absolute bottom-1/4 right-1/4 w-64 h-64 blur-[100px] rounded-full mix-blend-screen pointer-events-none opacity-50 ${isDark ? 'bg-white/10' : 'bg-black/5'}`}
-            />
+            {isMounted && (
+                <>
+                    <div
+                        className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full mix-blend-screen pointer-events-none opacity-50 ${isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.08)_0%,transparent_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.03)_0%,transparent_70%)]'}`}
+                    />
+                    <div
+                        className={`absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full mix-blend-screen pointer-events-none opacity-50 ${isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.08)_0%,transparent_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.03)_0%,transparent_70%)]'}`}
+                    />
+                </>
+            )}
 
             <motion.div style={{ y: yBg, opacity: opacityHero }} className="w-full max-w-[1400px] grid md:grid-cols-2 gap-12 lg:gap-20 items-center mt-24 md:mt-0 relative z-10">
                 <motion.div variants={staggerContainer} initial="hidden" animate="visible">
@@ -123,7 +132,7 @@ const Hero = () => {
                     initial={{ scale: 0.8, opacity: 0, rotate: -5 }} animate={{ scale: 1, opacity: 1, rotate: 0 }} transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                     className="relative flex justify-center md:justify-end"
                 >
-                    <div className={`absolute inset-0 blur-[120px] rounded-full ${isDark ? 'bg-white/5' : 'bg-black/5'}`}></div>
+                    <div className={`absolute inset-0 rounded-full ${isDark ? 'bg-[radial-gradient(circle,rgba(255,255,255,0.05)_0%,transparent_70%)]' : 'bg-[radial-gradient(circle,rgba(0,0,0,0.03)_0%,transparent_70%)]'}`}></div>
                     <motion.div
                         style={{
                             skewY: skewHero
@@ -131,7 +140,13 @@ const Hero = () => {
                         className={`relative p-2 border group overflow-hidden transition-colors duration-700 ${isDark ? 'border-white/20 bg-black' : 'border-black/10 bg-white'}`}
                         data-hover="true"
                     >
-                        <img src={heroImg} className="w-[clamp(16rem,35vw,28rem)] h-[clamp(16rem,35vw,28rem)] object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" alt="Samson Raj N" />
+                        <img 
+                            src={heroImg} 
+                            className="w-[clamp(16rem,35vw,28rem)] h-[clamp(16rem,35vw,28rem)] object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
+                            alt="Samson Raj N" 
+                            decoding="async"
+                            fetchpriority="high"
+                        />
                     </motion.div>
                     <div className={`absolute -bottom-6 -right-6 text-[10px] font-mono hidden md:block cursor-default transition-colors duration-300 ${isDark ? 'text-zinc-600 hover:text-zinc-400' : 'text-zinc-400 hover:text-zinc-600'}`}>IMG_SRC_01</div>
                 </motion.div>

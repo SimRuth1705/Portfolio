@@ -113,6 +113,7 @@ const Contact = () => {
                         <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: "100%" }}
+                            viewport={{ once: true }}
                             transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                             className={`h-px mb-12 ${isInverted ? 'bg-gradient-to-r from-black/20 via-black/5 to-transparent' : 'bg-gradient-to-r from-white/20 via-white/5 to-transparent'}`}
                         />

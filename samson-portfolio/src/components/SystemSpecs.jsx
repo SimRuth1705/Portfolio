@@ -44,6 +44,7 @@ const SystemSpecs = () => {
                     <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: "100%" }}
+                        viewport={{ once: true }}
                         transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className={`h-px mt-6 ${isDark ? 'bg-gradient-to-r from-white/40 via-white/10 to-transparent' : 'bg-gradient-to-r from-black/40 via-black/10 to-transparent'}`}
                     />

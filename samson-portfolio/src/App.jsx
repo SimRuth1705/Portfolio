@@ -1,14 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Suspense, lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { motion, useScroll, useSpring, AnimatePresence, useMotionValueEvent } from "framer-motion";
 import { useTheme } from "./context/ThemeContext";
 
 // Global Components
-import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import CommandPalette from "./components/CommandPalette";
-import SystemDialog from "./components/SystemDialog";
+import LazySection from "./components/LazySection";
+
+const CustomCursor = lazy(() => import("./components/CustomCursor"));
+const Footer = lazy(() => import("./components/Footer"));
+const CommandPalette = lazy(() => import("./components/CommandPalette"));
+const SystemDialog = lazy(() => import("./components/SystemDialog"));
 
 // Pages
 import Home from "./pages/Home";
@@ -81,9 +83,11 @@ function App() {
       style={{ position: 'relative' }}
     >
         {/* 1. Global Utilities */}
-        <CustomCursor />
-        <CommandPalette />
-        <SystemDialog />
+        <Suspense fallback={null}>
+          <CustomCursor />
+          <CommandPalette />
+          <SystemDialog />
+        </Suspense>
         <div className="fixed inset-0 pointer-events-none noise-overlay z-[99999] opacity-[0.03]"></div>
       {/* Scroll Progress Bar Container */}
       <div className="fixed top-0 left-0 right-0 h-1 z-[100]">
@@ -128,7 +132,11 @@ function App() {
       </main>
 
       {/* 4. Structural Elements */}
-      <Footer />
+      <Suspense fallback={<div className="h-20" />}>
+        <LazySection>
+          <Footer />
+        </LazySection>
+      </Suspense>
 
       {/* Admin Modals */}
       <AnimatePresence>
