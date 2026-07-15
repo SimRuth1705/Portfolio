@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
+import LazySection from '../components/LazySection';
 
-// Layout Components
+// Above the fold components are loaded synchronously
 import Hero from '../components/Hero';
 import About from '../components/About';
-import Skills from '../components/Skills';
-import Projects from '../components/Projects';
-import Timeline from '../components/Timeline';
-import DevLog from '../components/DevLog';
-import GitHubStats from '../components/GitHubStats';
-import Lab from '../components/Lab';
-import SystemSpecs from '../components/SystemSpecs';
-import ApiStatus from '../components/ApiStatus';
-import Contact from '../components/Contact';
+
+// Below the fold components are lazy loaded
+const Skills = lazy(() => import('../components/Skills'));
+const Projects = lazy(() => import('../components/Projects'));
+const Timeline = lazy(() => import('../components/Timeline'));
+const GitHubStats = lazy(() => import('../components/GitHubStats'));
+const DevLog = lazy(() => import('../components/DevLog'));
+const Lab = lazy(() => import('../components/Lab'));
+const SystemSpecs = lazy(() => import('../components/SystemSpecs'));
+const ApiStatus = lazy(() => import('../components/ApiStatus'));
+const Contact = lazy(() => import('../components/Contact'));
+
+const Fallback = () => <div className="h-[200px] w-full opacity-0" />;
 
 const Home = () => {
   const sectionVariants = {
@@ -45,15 +50,78 @@ const Home = () => {
     >
       <motion.div className="relative" variants={itemVariants}><Hero /></motion.div>
       <motion.div className="relative" variants={itemVariants}><About /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><Skills /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><Projects /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><Timeline /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><GitHubStats /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><DevLog /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><Lab /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><SystemSpecs /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><ApiStatus /></motion.div>
-      <motion.div className="relative" variants={itemVariants}><Contact /></motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <Skills />
+          </LazySection>
+        </Suspense>
+      </motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <Projects />
+          </LazySection>
+        </Suspense>
+      </motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <Timeline />
+          </LazySection>
+        </Suspense>
+      </motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <GitHubStats />
+          </LazySection>
+        </Suspense>
+      </motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <DevLog />
+          </LazySection>
+        </Suspense>
+      </motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <Lab />
+          </LazySection>
+        </Suspense>
+      </motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <SystemSpecs />
+          </LazySection>
+        </Suspense>
+      </motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <ApiStatus />
+          </LazySection>
+        </Suspense>
+      </motion.div>
+      
+      <motion.div className="relative" variants={itemVariants}>
+        <Suspense fallback={<Fallback />}>
+          <LazySection>
+            <Contact />
+          </LazySection>
+        </Suspense>
+      </motion.div>
     </motion.div>
   );
 };

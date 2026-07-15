@@ -151,13 +151,13 @@ const Contact = () => {
 
                     {/* Social Links */}
                     <motion.div variants={staggerContainer} className={`flex gap-8 pt-12 border-t ${socialBorder}`}>
-                        <motion.a variants={fadeInUp} href="https://github.com/SimRuth1705" target="_blank" rel="noopener noreferrer" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
+                        <motion.a variants={fadeInUp} href="https://github.com/SimRuth1705" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
                             <Github size={22} />
                         </motion.a>
-                        <motion.a variants={fadeInUp} href="https://www.linkedin.com/in/samsonrajn1706" target="_blank" rel="noopener noreferrer" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
+                        <motion.a variants={fadeInUp} href="https://www.linkedin.com/in/samsonrajn1706" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
                             <Linkedin size={22} />
                         </motion.a>
-                        <motion.a variants={fadeInUp} href="https://x.com/raj_samson52595" target="_blank" rel="noopener noreferrer" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
+                        <motion.a variants={fadeInUp} href="https://x.com/raj_samson52595" target="_blank" rel="noopener noreferrer" aria-label="Twitter Profile" className={`${socialColor} hover:scale-125 transition-all duration-300`}>
                             <Twitter size={22} />
                         </motion.a>
                         <motion.div variants={fadeInUp} className={`ml-auto flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest cursor-default transition-colors duration-300 ${socialText}`}>

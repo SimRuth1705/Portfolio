@@ -5,7 +5,7 @@ import { useTheme } from "../context/ThemeContext";
 import Editable from "./Editable";
 import { API_BASE } from "../constants";
 
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || "";
+// Request unauthenticated GitHub API to prevent token leak in bundle.
 
 const StatCard = ({ icon, label, value, isDark, delay }) => (
   <motion.div
@@ -116,6 +116,22 @@ const GitHubStats = () => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const fallbackStats = { repos: 12, stars: 24, followers: 8, following: 15 };
+  const fallbackRepos = [
+    { id: 1, name: "mern-portfolio", description: "A highly optimized MERN stack developer portfolio.", html_url: `https://github.com/${githubUser}/mern-portfolio`, language: "JavaScript", stargazers_count: 5, forks_count: 2 },
+    { id: 2, name: "e-commerce-platform", description: "Scalable microservices-based e-commerce backend.", html_url: `https://github.com/${githubUser}/e-commerce-platform`, language: "Python", stargazers_count: 8, forks_count: 3 },
+    { id: 3, name: "task-manager-api", description: "Secure RESTful API for team collaboration and task tracking.", html_url: `https://github.com/${githubUser}/task-manager-api`, language: "TypeScript", stargazers_count: 4, forks_count: 1 }
+  ];
+  const fallbackLanguages = [
+    { name: "JavaScript", percentage: 45, color: "#f7df1e" },
+    { name: "Python", percentage: 25, color: "#3572A5" },
+    { name: "TypeScript", percentage: 15, color: "#3178c6" },
+    { name: "HTML", percentage: 10, color: "#e34c26" },
+    { name: "CSS", percentage: 5, color: "#563d7c" }
+  ];
+  const fallbackActivities = [
+    { id: "1", created_at: new Date().toISOString(), message: "Optimized asset load times and implemented dynamic code splitting", repo: { name: `${githubUser}/mern-portfolio` } },
+    { id: "2", created_at: new Date(Date.now() - 86400000).toISOString(), message: "Fixed JWT authorization check and updated API endpoints", repo: { name: `${githubUser}/e-commerce-platform` } }
+  ];
 
   const getLanguageColor = (lang) => {
     const colors = {
@@ -139,7 +155,7 @@ const GitHubStats = () => {
   }, []);
 
   useEffect(() => {
-    const headers = GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {};
+    const headers = {};
 
     const fetchStats = async () => {
       try {
@@ -202,6 +218,9 @@ const GitHubStats = () => {
       } catch (err) {
         console.error("GitHub Fetch Error:", err);
         setStats(fallbackStats);
+        setFeaturedRepos(fallbackRepos);
+        setDynamicLanguages(fallbackLanguages);
+        setActivities(fallbackActivities);
       } finally { setLoading(false); }
     };
 

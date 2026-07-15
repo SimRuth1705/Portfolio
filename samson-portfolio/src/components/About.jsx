@@ -333,7 +333,7 @@ const About = () => {
                 </div>
                 <div className="text-left">
                   <p className={`text-[10px] font-mono uppercase tracking-widest ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>Email</p>
-                  <Editable id="about_email" defaultContent="samson@example.com" className="text-sm font-bold tracking-wider" />
+                  <Editable id="about_email" defaultContent="samsonraj74@gmail.com" className="text-sm font-bold tracking-wider" />
                 </div>
               </div>
 

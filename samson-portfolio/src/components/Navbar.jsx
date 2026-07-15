@@ -6,7 +6,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/logo-seal.png";
+const logo = "/images/logo-seal.webp";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { LogOut, Shield, Command, Menu, X, Sun, Moon, Zap, FolderPlus, Clock, MessageSquarePlus, Code, Activity } from "lucide-react";
